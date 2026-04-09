@@ -1,0 +1,21 @@
+{
+  "name": "firebase-scripts",
+  "version": "1.0.0",
+  "description": "Firebase setup and seeding scripts for Financial Management System",
+  "type": "module",
+  "scripts": {
+    "create-admin": "node create-admin.js",
+    "seed-data": "node seed-data.js"
+  },
+  "keywords": [
+    "firebase",
+    "firestore",
+    "seed"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "firebase": "^10.7.1",
+    "firebase-admin": "^13.7.0"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "763480870514",
+    "project_id": "nessbid-1",
+    "storage_bucket": "nessbid-1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:763480870514:android:47d17b108fbdac42b1bceb",
+        "android_client_info": {
+          "package_name": "com.financeapp.flutter_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "763480870514-d21idt67smbhl1emh1rhdstvivl08lbr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-Ewi79ffagnRmwb6qSyzk1eZk9DqXIic"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "763480870514-d21idt67smbhl1emh1rhdstvivl08lbr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
