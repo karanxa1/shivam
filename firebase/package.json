@@ -6,7 +6,8 @@
   "scripts": {
     "create-admin": "node create-admin.js",
     "seed-data": "node seed-data.js",
-    "add-users": "node add-users.js"
+    "add-users": "node add-users.js",
+    "fix-users": "node admin-fix-users.js"
   },
   "keywords": [
     "firebase",

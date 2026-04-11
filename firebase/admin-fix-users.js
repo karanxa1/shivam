@@ -55,12 +55,12 @@ if (!getApps().length) {
 const adminAuth = getAuth();
 const adminDb = getFirestore();
 
-const NEW_PASSWORD = 'karan@1234';
+const NEW_PASSWORD = 'password1234';
 
 const users = [
-  { email: 'karanravirajput@gmail.com', name: 'Karan Ravi Rajput', role: 'authority' },
-  { email: 'karanrajputxa@gmail.com',   name: 'Karan Rajput',      role: 'regular'   },
-  { email: 'datemenot1234@gmail.com',   name: 'Date Me Not',       role: 'regular'   },
+  { email: 'pinjareshivam@gmail.com', name: 'Shivam Pinjare', role: 'authority' },
+  { email: 'shyampawar@gmail.com',    name: 'Shyam Pawar',    role: 'regular'   },
+  { email: 'yashsh6055@gmail.com',    name: 'Yash',           role: 'regular'   },
 ];
 
 async function fixUser({ email, name, role }) {
@@ -101,7 +101,7 @@ for (const u of users) await fixUser(u);
 console.log('\n╔══════════════════════════════════════════════════╗');
 console.log('║  ✓  All users updated                            ║');
 console.log('╚══════════════════════════════════════════════════╝');
-console.log('\n  karanravirajput@gmail.com  →  authority  /  karan@1234');
-console.log('  karanrajputxa@gmail.com    →  regular    /  karan@1234');
-console.log('  datemenot1234@gmail.com    →  regular    /  karan@1234\n');
+console.log('\n  pinjareshivam@gmail.com  →  authority  /  password1234');
+console.log('  shyampawar@gmail.com     →  regular    /  password1234');
+console.log('  yashsh6055@gmail.com     →  regular    /  password1234\n');
 process.exit(0);
