@@ -21,12 +21,12 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 const users = [
-  { email: 'karanravirajput@gmail.com', name: 'Karan Ravi Rajput', role: 'authority' },
-  { email: 'karanrajputxa@gmail.com',   name: 'Karan Rajput',      role: 'regular'   },
-  { email: 'datemenot1234@gmail.com',   name: 'Date Me Not',       role: 'regular'   },
+  { email: 'pinjareshivam@gmail.com', name: 'Shivam Pinjare', role: 'authority' },
+  { email: 'shyampawar@gmail.com',   name: 'Shyam Pawar',      role: 'regular'   },
+  { email: 'yashsh6055@gmail.com',   name: 'Yash',       role: 'regular'   },
 ];
 
-const PASSWORD = 'karan@1234';
+const PASSWORD = 'password1234';
 
 async function addUser({ email, name, role }) {
   try {

@@ -1,5 +1,10 @@
+import 'dart:io';
+
+import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../core/firebase/firestore_service.dart';
 import '../../../core/models/payslip.dart';
@@ -26,9 +31,18 @@ class _MyPayslipsScreenState extends State<MyPayslipsScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('My Payslips')),
+      appBar: AppBar(
+        title: const Text('My Payslips'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.download_outlined),
+            tooltip: 'Export CSV',
+            onPressed: () => _exportPayslipsCsv(context, user.uid),
+          ),
+        ],
+      ),
       body: StreamBuilder<List<Payslip>>(
-        stream: firestoreService.payslipsStream(user.uid),
+        stream: firestoreService.payslipsStreamByUserUid(user.uid),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -146,6 +160,84 @@ class _MyPayslipsScreenState extends State<MyPayslipsScreen> {
         },
       ),
     );
+  }
+
+  Future<void> _exportPayslipsCsv(BuildContext context, String uid) async {
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      final firestoreService = context.read<FirestoreService>();
+      final employeeId = await firestoreService.getEmployeeDocIdByUid(uid);
+      if (employeeId == null) {
+        messenger.showSnackBar(
+          const SnackBar(
+            content: Text('Employee record not found'),
+            backgroundColor: AppTheme.errorColor,
+          ),
+        );
+        return;
+      }
+
+      final payslips = await firestoreService
+          .getAllPayslipsForEmployee(employeeId);
+
+      if (payslips.isEmpty) {
+        messenger.showSnackBar(
+          const SnackBar(content: Text('No payslips to export')),
+        );
+        return;
+      }
+
+      final rows = <List<dynamic>>[
+        [
+          'Month',
+          'Basic Salary',
+          'Overtime Pay',
+          'Total Earnings',
+          'Deductions',
+          'Net Pay',
+        ],
+        ...payslips.map(
+          (p) => [
+            p.month,
+            p.basicSalary.toStringAsFixed(2),
+            p.overtimePay.toStringAsFixed(2),
+            p.totalEarnings.toStringAsFixed(2),
+            p.deductions.toStringAsFixed(2),
+            p.netPay.toStringAsFixed(2),
+          ],
+        ),
+      ];
+
+      final csv = const ListToCsvConverter().convert(rows);
+      final dir = await getTemporaryDirectory();
+      final file = File(
+        '${dir.path}/payslips_${DateTime.now().millisecondsSinceEpoch}.csv',
+      );
+      await file.writeAsString(csv);
+
+      await Share.shareXFiles(
+        [XFile(file.path)],
+        subject: 'My Payslips Export',
+      );
+
+      if (context.mounted) {
+        messenger.showSnackBar(
+          const SnackBar(
+            content: Text('Payslips exported successfully'),
+            backgroundColor: AppTheme.successColor,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text('Export failed: $e'),
+            backgroundColor: AppTheme.errorColor,
+          ),
+        );
+      }
+    }
   }
 
   void _showPayslipDetails(Payslip payslip) {

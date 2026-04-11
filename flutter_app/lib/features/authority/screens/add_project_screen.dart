@@ -19,6 +19,7 @@ class AddProjectScreen extends StatefulWidget {
 class _AddProjectScreenState extends State<AddProjectScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
 
   ProjectStatus _selectedStatus = ProjectStatus.pending;
   DateTime _deadline = DateTime.now().add(const Duration(days: 30));
@@ -28,6 +29,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
   @override
   void dispose() {
     _titleController.dispose();
+    _descriptionController.dispose();
     super.dispose();
   }
 
@@ -77,6 +79,20 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                   }
                   return null;
                 },
+              ),
+              const SizedBox(height: 16),
+
+              // Description field
+              TextFormField(
+                controller: _descriptionController,
+                textCapitalization: TextCapitalization.sentences,
+                maxLines: 3,
+                decoration: const InputDecoration(
+                  labelText: 'Description (optional)',
+                  hintText: 'Describe the project goals and scope...',
+                  prefixIcon: Icon(Icons.description_outlined),
+                  alignLabelWithHint: true,
+                ),
               ),
               const SizedBox(height: 16),
 
@@ -266,17 +282,18 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                     child: Column(
                       children: employees.map((employee) {
                         final isSelected = _selectedEmployeeIds.contains(
-                          employee.uid,
+                          employee.id,
                         );
                         return _EmployeeCheckTile(
                           employee: employee,
                           isSelected: isSelected,
                           onChanged: (selected) {
+                            if (employee.id == null) return;
                             setState(() {
                               if (selected == true) {
-                                _selectedEmployeeIds.add(employee.uid);
+                                _selectedEmployeeIds.add(employee.id!);
                               } else {
-                                _selectedEmployeeIds.remove(employee.uid);
+                                _selectedEmployeeIds.remove(employee.id);
                               }
                             });
                           },
@@ -395,6 +412,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
 
       final project = Project(
         title: _titleController.text.trim(),
+        description: _descriptionController.text.trim(),
         status: _selectedStatus,
         kpiPercent: 0,
         assignedEmployeeIds: _selectedEmployeeIds,

@@ -68,12 +68,21 @@ service cloud.firestore {
       allow read: if isAuth();
     }
 
+    // Helper: verify employeeId (Firestore doc ID) belongs to the requesting user
+    function isEmployeeOwner(employeeDocId) {
+      return isAuth() &&
+        employeeDocId != '' &&
+        exists(/databases/$(database)/documents/employees/$(employeeDocId)) &&
+        get(/databases/$(database)/documents/employees/$(employeeDocId)).data.uid == request.auth.uid;
+    }
+
     // Tasks collection - authority can write, employees can read/update their own
     match /tasks/{taskId} {
       // Authority has full access
       allow read, write: if isAuthority();
       // Employee can read and update (status) their own tasks
-      allow read, update: if isAuth() && resource.data.employeeId == request.auth.uid;
+      // employeeId stores the Firestore document ID of the employee record
+      allow read, update: if isEmployeeOwner(resource.data.employeeId);
     }
 
     // Payslips collection - authority can write, employees can read their own
@@ -81,7 +90,18 @@ service cloud.firestore {
       // Authority has full access
       allow read, write: if isAuthority();
       // Employee can read their own payslips only
-      allow read: if isAuth() && resource.data.employeeId == request.auth.uid;
+      // employeeId stores the Firestore document ID of the employee record
+      allow read: if isEmployeeOwner(resource.data.employeeId);
+    }
+
+    // Notifications collection - users can read/update their own notifications
+    match /notifications/{notifId} {
+      // Users can read and update (mark as read) their own notifications
+      allow read, update: if isAuth() && resource.data.targetUid == request.auth.uid;
+      // Any authenticated user can create notifications (for system-triggered notifications)
+      allow create: if isAuth();
+      // Authority can read all notifications
+      allow read: if isAuthority();
     }
   }
 }

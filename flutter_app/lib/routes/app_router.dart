@@ -15,6 +15,7 @@ import '../features/regular/screens/transactions_screen.dart';
 import '../features/regular/screens/add_transaction_screen.dart';
 import '../features/regular/screens/budgets_screen.dart';
 import '../features/regular/screens/profile_screen.dart';
+import '../features/regular/screens/notifications_screen.dart';
 
 // Authority screens
 import '../features/authority/screens/authority_dashboard_screen.dart';
@@ -60,6 +61,11 @@ class AppRouter {
   static const String myTasks = '/employee/tasks';
   static const String myPayslips = '/employee/payslips';
   static const String employeeProfile = '/employee/profile';
+
+  // Shared routes (accessible from all role shells via push)
+  static const String regularNotifications = '/regular/notifications';
+  static const String authorityNotifications = '/authority/notifications';
+  static const String employeeNotifications = '/employee/notifications';
 
   GoRouter router(AuthProvider authProvider) {
     return GoRouter(
@@ -165,6 +171,11 @@ class AppRouter {
               name: 'profile',
               builder: (context, state) => const ProfileScreen(),
             ),
+            GoRoute(
+              path: regularNotifications,
+              name: 'regularNotifications',
+              builder: (context, state) => const NotificationsScreen(),
+            ),
           ],
         ),
 
@@ -217,6 +228,11 @@ class AppRouter {
               name: 'generatePayslip',
               builder: (context, state) => const GeneratePayslipScreen(),
             ),
+            GoRoute(
+              path: authorityNotifications,
+              name: 'authorityNotifications',
+              builder: (context, state) => const NotificationsScreen(),
+            ),
           ],
         ),
 
@@ -245,6 +261,11 @@ class AppRouter {
               path: employeeProfile,
               name: 'employeeProfile',
               builder: (context, state) => const EmployeeProfileScreen(),
+            ),
+            GoRoute(
+              path: employeeNotifications,
+              name: 'employeeNotifications',
+              builder: (context, state) => const NotificationsScreen(),
             ),
           ],
         ),

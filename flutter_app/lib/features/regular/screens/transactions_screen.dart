@@ -1,6 +1,11 @@
+import 'dart:io';
+
+import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../core/firebase/firestore_service.dart';
 import '../../../core/models/transaction.dart';
@@ -34,6 +39,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       appBar: AppBar(
         title: const Text('Transactions'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.download_outlined),
+            tooltip: 'Export CSV',
+            onPressed: () => _exportCsv(context, uid),
+          ),
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
@@ -198,6 +208,59 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     );
   }
 
+  Future<void> _exportCsv(BuildContext context, String uid) async {
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      final firestoreService = context.read<FirestoreService>();
+      final transactions = await firestoreService.getAllTransactions(uid);
+
+      final rows = <List<dynamic>>[
+        ['Date', 'Title', 'Type', 'Category', 'Amount', 'Note', 'Recurring'],
+        ...transactions.map(
+          (t) => [
+            Formatters.date(t.date),
+            t.title,
+            t.type == TransactionType.income ? 'Income' : 'Expense',
+            t.category,
+            t.amount.toStringAsFixed(2),
+            t.note,
+            t.isRecurring ? (t.recurrenceType ?? 'yes') : 'no',
+          ],
+        ),
+      ];
+
+      final csv = const ListToCsvConverter().convert(rows);
+      final dir = await getTemporaryDirectory();
+      final file = File(
+        '${dir.path}/transactions_${DateTime.now().millisecondsSinceEpoch}.csv',
+      );
+      await file.writeAsString(csv);
+
+      await Share.shareXFiles(
+        [XFile(file.path)],
+        subject: 'My Transactions Export',
+      );
+
+      if (context.mounted) {
+        messenger.showSnackBar(
+          const SnackBar(
+            content: Text('Transactions exported successfully'),
+            backgroundColor: AppTheme.successColor,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text('Export failed: $e'),
+            backgroundColor: AppTheme.errorColor,
+          ),
+        );
+      }
+    }
+  }
+
   void _showTransactionDetails(Transaction txn) {
     final isIncome = txn.type == TransactionType.income;
 
@@ -250,6 +313,13 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             _DetailRow(label: 'Date', value: Formatters.dateFull(txn.date)),
             if (txn.note.isNotEmpty)
               _DetailRow(label: 'Notes', value: txn.note),
+            if (txn.isRecurring)
+              _DetailRow(
+                label: 'Recurring',
+                value: txn.recurrenceType != null
+                    ? '${txn.recurrenceType![0].toUpperCase()}${txn.recurrenceType!.substring(1)}'
+                    : 'Yes',
+              ),
             const SizedBox(height: 16),
           ],
         ),
@@ -337,9 +407,24 @@ class _TransactionTile extends StatelessWidget {
             size: 20,
           ),
         ),
-        title: Text(
-          transaction.title,
-          style: const TextStyle(fontWeight: FontWeight.w500),
+        title: Row(
+          children: [
+            Expanded(
+              child: Text(
+                transaction.title,
+                style: const TextStyle(fontWeight: FontWeight.w500),
+              ),
+            ),
+            if (transaction.isRecurring)
+              Padding(
+                padding: const EdgeInsets.only(left: 4),
+                child: Icon(
+                  Icons.repeat,
+                  size: 14,
+                  color: AppTheme.primaryYellow,
+                ),
+              ),
+          ],
         ),
         subtitle: Text(
           transaction.category,

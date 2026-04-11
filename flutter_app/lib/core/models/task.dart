@@ -46,7 +46,8 @@ class Task {
   // Helper to convert string to TaskStatus
   static TaskStatus _statusFromString(String status) {
     switch (status) {
-      case 'in-progress':
+      case 'inProgress':
+      case 'in-progress': // legacy support
         return TaskStatus.inProgress;
       case 'done':
         return TaskStatus.done;
@@ -60,7 +61,7 @@ class Task {
   static String _statusToString(TaskStatus status) {
     switch (status) {
       case TaskStatus.inProgress:
-        return 'in-progress';
+        return 'inProgress';
       case TaskStatus.done:
         return 'done';
       case TaskStatus.pending:

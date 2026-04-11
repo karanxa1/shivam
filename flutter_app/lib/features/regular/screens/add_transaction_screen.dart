@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../core/firebase/firestore_service.dart';
 import '../../../core/models/transaction.dart';
 import '../../../core/providers/auth_provider.dart';
+import '../../../core/services/notification_service.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/validators.dart';
 import '../../../routes/app_router.dart';
@@ -26,6 +27,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   String _category = 'Food';
   DateTime _date = DateTime.now();
   bool _isLoading = false;
+  bool _isRecurring = false;
+  String _recurrenceType = 'monthly';
 
   final List<String> _expenseCategories = [
     'Food',
@@ -82,9 +85,16 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         title: _titleController.text.trim(),
         date: _date,
         note: _noteController.text.trim(),
+        isRecurring: _isRecurring,
+        recurrenceType: _isRecurring ? _recurrenceType : null,
       );
 
       await firestoreService.addTransaction(transaction);
+
+      // Check budget alert after saving expense
+      if (_type == TransactionType.expense) {
+        _checkBudgetAlert(uid, firestoreService);
+      }
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -108,6 +118,30 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       if (mounted) {
         setState(() => _isLoading = false);
       }
+    }
+  }
+
+  void _checkBudgetAlert(String uid, FirestoreService firestoreService) async {
+    try {
+      final now = DateTime.now();
+      final month =
+          '${now.year}-${now.month.toString().padLeft(2, '0')}';
+      final budgets = await firestoreService
+          .budgetsStream(uid, month)
+          .first;
+      for (final budget in budgets) {
+        if (budget.category == _category && budget.limit > 0) {
+          if (budget.percentageUsed >= 80) {
+            await NotificationService.showBudgetAlert(
+              category: budget.category,
+              spent: budget.spent,
+              limit: budget.limit,
+            );
+          }
+        }
+      }
+    } catch (e) {
+      // Silently ignore budget alert errors
     }
   }
 
@@ -278,6 +312,80 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                 labelText: 'Note (optional)',
                 prefixIcon: Icon(Icons.notes_outlined),
                 alignLabelWithHint: true,
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Recurring transaction toggle
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
+              decoration: BoxDecoration(
+                color: AppTheme.darkCard,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppTheme.darkDivider),
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.repeat,
+                        color: AppTheme.darkTextSecondary,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 12),
+                      const Expanded(
+                        child: Text(
+                          'Recurring Transaction',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      Switch(
+                        value: _isRecurring,
+                        onChanged: (value) =>
+                            setState(() => _isRecurring = value),
+                        activeThumbColor: AppTheme.primaryYellow,
+                      ),
+                    ],
+                  ),
+                  if (_isRecurring) ...[
+                    const SizedBox(height: 12),
+                    DropdownButtonFormField<String>(
+                      initialValue: _recurrenceType,
+                      decoration: const InputDecoration(
+                        labelText: 'Repeat Every',
+                        prefixIcon: Icon(Icons.schedule_outlined),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 10,
+                        ),
+                      ),
+                      dropdownColor: AppTheme.darkCard,
+                      items: const [
+                        DropdownMenuItem(
+                          value: 'daily',
+                          child: Text('Daily'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'weekly',
+                          child: Text('Weekly'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'monthly',
+                          child: Text('Monthly'),
+                        ),
+                      ],
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() => _recurrenceType = value);
+                        }
+                      },
+                    ),
+                  ],
+                ],
               ),
             ),
             const SizedBox(height: 32),

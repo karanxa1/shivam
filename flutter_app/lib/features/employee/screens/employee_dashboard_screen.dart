@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/firebase/firestore_service.dart';
 import '../../../core/models/employee.dart';
+import '../../../core/models/notification.dart';
 import '../../../core/models/payslip.dart';
 import '../../../core/models/task.dart';
 import '../../../core/providers/auth_provider.dart';
@@ -28,13 +29,9 @@ class EmployeeDashboardScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Dashboard'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('No new notifications')),
-              );
-            },
+          _NotificationBellButton(
+            notificationsRoute: AppRouter.employeeNotifications,
+            uid: user.uid,
           ),
         ],
       ),
@@ -80,7 +77,7 @@ class EmployeeDashboardScreen extends StatelessWidget {
               const SizedBox(height: 12),
 
               StreamBuilder<List<Task>>(
-                stream: firestoreService.tasksStream(user.uid),
+                stream: firestoreService.tasksStreamByUserUid(user.uid),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const _LoadingCard();
@@ -166,7 +163,7 @@ class EmployeeDashboardScreen extends StatelessWidget {
               const SizedBox(height: 12),
 
               StreamBuilder<List<Payslip>>(
-                stream: firestoreService.payslipsStream(user.uid),
+                stream: firestoreService.payslipsStreamByUserUid(user.uid),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const _LoadingCard();
@@ -629,6 +626,59 @@ class _EmptyState extends StatelessWidget {
           Text(message, style: TextStyle(color: AppTheme.darkTextSecondary)),
         ],
       ),
+    );
+  }
+}
+
+class _NotificationBellButton extends StatelessWidget {
+  final String notificationsRoute;
+  final String uid;
+
+  const _NotificationBellButton({
+    required this.notificationsRoute,
+    required this.uid,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final firestoreService = context.read<FirestoreService>();
+    return StreamBuilder<List<AppNotification>>(
+      stream: firestoreService.notificationsStream(uid),
+      builder: (context, snapshot) {
+        final unreadCount =
+            (snapshot.data ?? []).where((n) => !n.read).length;
+        return Stack(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.notifications_outlined),
+              onPressed: () => context.go(notificationsRoute),
+            ),
+            if (unreadCount > 0)
+              Positioned(
+                right: 6,
+                top: 6,
+                child: Container(
+                  padding: const EdgeInsets.all(3),
+                  decoration: const BoxDecoration(
+                    color: AppTheme.errorColor,
+                    shape: BoxShape.circle,
+                  ),
+                  constraints:
+                      const BoxConstraints(minWidth: 16, minHeight: 16),
+                  child: Text(
+                    unreadCount > 9 ? '9+' : '$unreadCount',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 9,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 }

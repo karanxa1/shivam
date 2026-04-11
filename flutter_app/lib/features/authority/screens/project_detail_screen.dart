@@ -198,6 +198,27 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                       ),
                     ],
                   ),
+                  // Description
+                  if (project.description.isNotEmpty) ...[
+                    const SizedBox(height: 16),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: AppTheme.amoledBlack,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: AppTheme.darkDivider),
+                      ),
+                      child: Text(
+                        project.description,
+                        style: TextStyle(
+                          color: AppTheme.darkTextSecondary,
+                          fontSize: 14,
+                          height: 1.5,
+                        ),
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: 20),
                   // Progress
                   Row(
@@ -335,7 +356,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                 builder: (context, snapshot) {
                   final allEmployees = snapshot.data ?? [];
                   final teamMembers = allEmployees
-                      .where((e) => project.assignedEmployeeIds.contains(e.uid))
+                      .where((e) => project.assignedEmployeeIds.contains(e.id))
                       .toList();
 
                   return Column(
@@ -673,16 +694,17 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                         itemCount: employees.length,
                         itemBuilder: (context, index) {
                           final employee = employees[index];
-                          final isSelected = selectedIds.contains(employee.uid);
+                          final isSelected = selectedIds.contains(employee.id);
 
                           return CheckboxListTile(
                             value: isSelected,
                             onChanged: (value) {
+                              if (employee.id == null) return;
                               setSheetState(() {
                                 if (value == true) {
-                                  selectedIds.add(employee.uid);
+                                  selectedIds.add(employee.id!);
                                 } else {
-                                  selectedIds.remove(employee.uid);
+                                  selectedIds.remove(employee.id);
                                 }
                               });
                             },
@@ -731,7 +753,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                   builder: (context, snapshot) {
                     final employees = (snapshot.data ?? [])
                         .where(
-                          (e) => project.assignedEmployeeIds.contains(e.uid),
+                          (e) => project.assignedEmployeeIds.contains(e.id),
                         )
                         .toList();
 
@@ -744,7 +766,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                       items: employees
                           .map(
                             (e) => DropdownMenuItem(
-                              value: e.uid,
+                              value: e.id,
                               child: Text(e.name),
                             ),
                           )

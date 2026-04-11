@@ -118,7 +118,7 @@ class _PayslipsScreenState extends State<PayslipsScreen> {
                 }
 
                 final employees = employeeSnapshot.data ?? [];
-                final employeeMap = {for (var e in employees) e.uid: e};
+                final employeeMap = {for (var e in employees) if (e.id != null) e.id!: e};
 
                 return StreamBuilder<List<Payslip>>(
                   stream: firestoreService.allPayslipsStream(),

@@ -202,7 +202,7 @@ class _GeneratePayslipScreenState extends State<GeneratePayslipScreen> {
                             _selectedEmployees.clear();
                           } else {
                             _selectedEmployees.addAll(
-                              employees.map((e) => e.uid),
+                              employees.where((e) => e.id != null).map((e) => e.id!),
                             );
                           }
                           _selectAll = !_selectAll;
@@ -222,7 +222,7 @@ class _GeneratePayslipScreenState extends State<GeneratePayslipScreen> {
                   itemBuilder: (context, index) {
                     final employee = employees[index];
                     final isSelected = _selectedEmployees.contains(
-                      employee.uid,
+                      employee.id,
                     );
                     final estimatedPay = Payslip.calculateNetPay(
                       employee.salary,
@@ -235,12 +235,13 @@ class _GeneratePayslipScreenState extends State<GeneratePayslipScreen> {
                       isSelected: isSelected,
                       estimatedPay: estimatedPay,
                       onToggle: () {
+                        if (employee.id == null) return;
                         setState(() {
                           if (isSelected) {
-                            _selectedEmployees.remove(employee.uid);
+                            _selectedEmployees.remove(employee.id);
                             _selectAll = false;
                           } else {
-                            _selectedEmployees.add(employee.uid);
+                            _selectedEmployees.add(employee.id!);
                             if (_selectedEmployees.length == employees.length) {
                               _selectAll = true;
                             }
@@ -349,18 +350,19 @@ class _GeneratePayslipScreenState extends State<GeneratePayslipScreen> {
       // Get all employees
       final employees = await firestoreService.employeesStream().first;
 
-      // Filter selected employees
+      // Filter selected employees (using Firestore doc ID)
       final selectedEmployeesList = employees
-          .where((e) => _selectedEmployees.contains(e.uid))
+          .where((e) => e.id != null && _selectedEmployees.contains(e.id))
           .toList();
 
       int generatedCount = 0;
       int skippedCount = 0;
 
       for (final employee in selectedEmployeesList) {
-        // Check if payslip already exists for this month
+        if (employee.id == null) continue;
+        // Check if payslip already exists for this month (use Firestore doc ID)
         final existing = await firestoreService.getPayslipForMonth(
-          employee.uid,
+          employee.id!,
           _selectedMonth,
         );
 
@@ -369,9 +371,9 @@ class _GeneratePayslipScreenState extends State<GeneratePayslipScreen> {
           continue;
         }
 
-        // Generate payslip
+        // Generate payslip using Firestore document ID as employeeId
         final payslip = Payslip.generate(
-          employeeId: employee.uid,
+          employeeId: employee.id!,
           month: _selectedMonth,
           basicSalary: employee.salary,
           overtimeHours: employee.overtimeHours,

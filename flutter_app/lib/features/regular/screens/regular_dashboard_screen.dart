@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/firebase/firestore_service.dart';
+import '../../../core/models/notification.dart';
 import '../../../core/models/transaction.dart';
 import '../../../core/models/budget.dart';
 import '../../../core/providers/auth_provider.dart';
@@ -22,6 +23,11 @@ class RegularDashboardScreen extends StatelessWidget {
     if (uid == null) {
       return const Center(child: CircularProgressIndicator());
     }
+
+    // Process recurring transactions on dashboard load (fire and forget)
+    Future.microtask(
+      () => firestoreService.processRecurringTransactions(uid),
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -43,15 +49,16 @@ class RegularDashboardScreen extends StatelessWidget {
           ],
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined),
-            onPressed: () {},
+          _NotificationBellButton(
+            notificationsRoute: AppRouter.regularNotifications,
+            uid: uid,
           ),
         ],
       ),
       body: RefreshIndicator(
         onRefresh: () async {
           await authProvider.reloadUserData();
+          await firestoreService.processRecurringTransactions(uid);
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -567,6 +574,60 @@ class _RecentTransactions extends StatelessWidget {
               );
             },
           ),
+        );
+      },
+    );
+  }
+}
+
+/// Notification bell icon with unread count badge.
+class _NotificationBellButton extends StatelessWidget {
+  final String notificationsRoute;
+  final String uid;
+
+  const _NotificationBellButton({
+    required this.notificationsRoute,
+    required this.uid,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final firestoreService = context.read<FirestoreService>();
+    return StreamBuilder<List<AppNotification>>(
+      stream: firestoreService.notificationsStream(uid),
+      builder: (context, snapshot) {
+        final unreadCount =
+            (snapshot.data ?? []).where((n) => !n.read).length;
+        return Stack(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.notifications_outlined),
+              onPressed: () => context.go(notificationsRoute),
+            ),
+            if (unreadCount > 0)
+              Positioned(
+                right: 6,
+                top: 6,
+                child: Container(
+                  padding: const EdgeInsets.all(3),
+                  decoration: const BoxDecoration(
+                    color: AppTheme.errorColor,
+                    shape: BoxShape.circle,
+                  ),
+                  constraints:
+                      const BoxConstraints(minWidth: 16, minHeight: 16),
+                  child: Text(
+                    unreadCount > 9 ? '9+' : '$unreadCount',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 9,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+          ],
         );
       },
     );

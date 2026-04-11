@@ -7,6 +7,7 @@ import 'firebase_options.dart';
 import 'core/firebase/auth_service.dart';
 import 'core/firebase/firestore_service.dart';
 import 'core/providers/auth_provider.dart';
+import 'core/services/notification_service.dart';
 import 'core/theme/app_theme.dart';
 import 'routes/app_router.dart';
 
@@ -41,6 +42,9 @@ void main() async {
       await Firebase.initializeApp();
     }
   }
+
+  // Initialize local notification service
+  await NotificationService.initialize();
 
   runApp(const FinanceApp());
 }

@@ -78,7 +78,7 @@ class _MyTasksScreenState extends State<MyTasksScreen>
           // Task list
           Expanded(
             child: StreamBuilder<List<Task>>(
-              stream: firestoreService.tasksStream(user.uid),
+              stream: firestoreService.tasksStreamByUserUid(user.uid),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());

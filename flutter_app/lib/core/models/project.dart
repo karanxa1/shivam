@@ -5,6 +5,7 @@ enum ProjectStatus { pending, active, completed }
 class Project {
   final String? id;
   final String title;
+  final String description;
   final ProjectStatus status;
   final double kpiPercent;
   final List<String> assignedEmployeeIds;
@@ -14,6 +15,7 @@ class Project {
   Project({
     this.id,
     required this.title,
+    this.description = '',
     required this.status,
     required this.kpiPercent,
     required this.assignedEmployeeIds,
@@ -27,6 +29,7 @@ class Project {
     return Project(
       id: doc.id,
       title: data['title'] ?? '',
+      description: data['description'] ?? '',
       status: _statusFromString(data['status'] ?? 'pending'),
       kpiPercent: (data['kpiPercent'] ?? 0).toDouble(),
       assignedEmployeeIds: List<String>.from(data['assignedEmployeeIds'] ?? []),
@@ -39,6 +42,7 @@ class Project {
   Map<String, dynamic> toFirestore() {
     return {
       'title': title,
+      'description': description,
       'status': _statusToString(status),
       'kpiPercent': kpiPercent,
       'assignedEmployeeIds': assignedEmployeeIds,
@@ -76,6 +80,7 @@ class Project {
   Project copyWith({
     String? id,
     String? title,
+    String? description,
     ProjectStatus? status,
     double? kpiPercent,
     List<String>? assignedEmployeeIds,
@@ -85,6 +90,7 @@ class Project {
     return Project(
       id: id ?? this.id,
       title: title ?? this.title,
+      description: description ?? this.description,
       status: status ?? this.status,
       kpiPercent: kpiPercent ?? this.kpiPercent,
       assignedEmployeeIds: assignedEmployeeIds ?? this.assignedEmployeeIds,

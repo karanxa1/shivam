@@ -559,7 +559,7 @@ class AppTheme {
   // Task status colors
   static const Map<String, Color> taskStatusColors = {
     'pending': Color(0xFFFF9800),
-    'in-progress': Color(0xFF2196F3),
+    'inProgress': Color(0xFF2196F3),
     'done': Color(0xFF4CAF50),
   };
 

@@ -11,6 +11,8 @@ class Transaction {
   final String category;
   final DateTime date;
   final String note;
+  final bool isRecurring;
+  final String? recurrenceType; // 'daily', 'weekly', 'monthly', null
 
   Transaction({
     this.id,
@@ -21,6 +23,8 @@ class Transaction {
     required this.category,
     required this.date,
     this.note = '',
+    this.isRecurring = false,
+    this.recurrenceType,
   });
 
   // Convert from Firestore document
@@ -37,12 +41,14 @@ class Transaction {
       category: data['category'] ?? '',
       date: (data['date'] as Timestamp?)?.toDate() ?? DateTime.now(),
       note: data['note'] ?? '',
+      isRecurring: data['isRecurring'] ?? false,
+      recurrenceType: data['recurrenceType'],
     );
   }
 
   // Convert to Firestore document
   Map<String, dynamic> toFirestore() {
-    return {
+    final map = <String, dynamic>{
       'userId': userId,
       'title': title,
       'amount': amount,
@@ -50,7 +56,10 @@ class Transaction {
       'category': category,
       'date': Timestamp.fromDate(date),
       'note': note,
+      'isRecurring': isRecurring,
+      'recurrenceType': recurrenceType,
     };
+    return map;
   }
 
   // CopyWith method
@@ -63,6 +72,8 @@ class Transaction {
     String? category,
     DateTime? date,
     String? note,
+    bool? isRecurring,
+    String? recurrenceType,
   }) {
     return Transaction(
       id: id ?? this.id,
@@ -73,6 +84,8 @@ class Transaction {
       category: category ?? this.category,
       date: date ?? this.date,
       note: note ?? this.note,
+      isRecurring: isRecurring ?? this.isRecurring,
+      recurrenceType: recurrenceType ?? this.recurrenceType,
     );
   }
 }
