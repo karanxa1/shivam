@@ -87,10 +87,10 @@ class AuthProvider with ChangeNotifier {
       _setLoading(true);
       _clearError();
 
-      // Only allow regular and employee roles during registration
-      if (role == UserRole.authority) {
+      // Only allow regular and employee roles during self-registration
+      if (role == UserRole.admin || role == UserRole.hr) {
         throw Exception(
-          'Authority role cannot be assigned during registration',
+          'Admin and HR roles cannot be assigned during registration',
         );
       }
 

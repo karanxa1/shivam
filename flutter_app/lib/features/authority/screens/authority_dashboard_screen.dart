@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/firebase/firestore_service.dart';
 import '../../../core/models/employee.dart';
+import '../../../core/models/user.dart';
 import '../../../core/models/notification.dart';
 import '../../../core/models/project.dart';
 import '../../../core/models/payslip.dart';
@@ -20,6 +21,7 @@ class AuthorityDashboardScreen extends StatelessWidget {
     final authProvider = context.watch<AuthProvider>();
     final firestoreService = context.read<FirestoreService>();
     final user = authProvider.appUser;
+    final role = authProvider.appUser?.role ?? UserRole.admin;
 
     return Scaffold(
       appBar: AppBar(
@@ -27,7 +29,9 @@ class AuthorityDashboardScreen extends StatelessWidget {
         actions: [
           if (user != null)
             _NotificationBellButton(
-              notificationsRoute: AppRouter.authorityNotifications,
+              notificationsRoute: user.role == UserRole.hr
+                  ? AppRouter.hrNotifications
+                  : AppRouter.adminNotifications,
               uid: user.uid,
             ),
           IconButton(
@@ -69,7 +73,7 @@ class AuthorityDashboardScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Welcome header
-            _WelcomeHeader(userName: user?.name ?? 'Authority'),
+            _WelcomeHeader(userName: user?.name ?? 'Admin', role: role),
             const SizedBox(height: 24),
 
             // Stats overview
@@ -106,9 +110,10 @@ class AuthorityDashboardScreen extends StatelessWidget {
                                     value: employees.length.toString(),
                                     color: AppTheme.infoColor,
                                     onTap: () =>
-                                        context.go(AppRouter.employees),
+                                        context.go(AppRouter.employeesFor(role)),
                                   ),
                                 ),
+                                if (role == UserRole.admin) ...[
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: _StatCard(
@@ -119,6 +124,7 @@ class AuthorityDashboardScreen extends StatelessWidget {
                                     onTap: () => context.go(AppRouter.projects),
                                   ),
                                 ),
+                                ],
                               ],
                             ),
                             const SizedBox(height: 12),
@@ -130,7 +136,7 @@ class AuthorityDashboardScreen extends StatelessWidget {
                                     label: 'Payslips',
                                     value: pendingPayslips.toString(),
                                     color: AppTheme.warningColor,
-                                    onTap: () => context.go(AppRouter.payslips),
+                                    onTap: () => context.go(AppRouter.payslipsFor(role)),
                                   ),
                                 ),
                                 const SizedBox(width: 12),
@@ -142,7 +148,7 @@ class AuthorityDashboardScreen extends StatelessWidget {
                                       totalSalary,
                                     ),
                                     color: AppTheme.primaryYellow,
-                                    onTap: () => context.go(AppRouter.payslips),
+                                    onTap: () => context.go(AppRouter.payslipsFor(role)),
                                   ),
                                 ),
                               ],
@@ -171,9 +177,10 @@ class AuthorityDashboardScreen extends StatelessWidget {
                   child: _QuickActionCard(
                     icon: Icons.person_add,
                     label: 'Add Employee',
-                    onTap: () => context.go(AppRouter.addEmployee),
+                    onTap: () => context.go(AppRouter.addEmployeeFor(role)),
                   ),
                 ),
+                if (role == UserRole.admin) ...[
                 const SizedBox(width: 12),
                 Expanded(
                   child: _QuickActionCard(
@@ -182,19 +189,21 @@ class AuthorityDashboardScreen extends StatelessWidget {
                     onTap: () => context.go(AppRouter.addProject),
                   ),
                 ),
+                ],
                 const SizedBox(width: 12),
                 Expanded(
                   child: _QuickActionCard(
                     icon: Icons.receipt_long,
                     label: 'Payslips',
-                    onTap: () => context.go(AppRouter.generatePayslip),
+                    onTap: () => context.go(AppRouter.generatePayslipFor(role)),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 24),
 
-            // Recent projects
+            // Recent projects (admin only)
+            if (role == UserRole.admin) ...[
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -241,13 +250,14 @@ class AuthorityDashboardScreen extends StatelessWidget {
                     return _ProjectCard(
                       project: project,
                       onTap: () =>
-                          context.go('/authority/projects/${project.id}'),
+                          context.go('/admin/projects/${project.id}'),
                     );
                   }).toList(),
                 );
               },
             ),
             const SizedBox(height: 24),
+            ], // end admin-only projects section
 
             // Recent employees
             Row(
@@ -260,7 +270,7 @@ class AuthorityDashboardScreen extends StatelessWidget {
                   ),
                 ),
                 TextButton(
-                  onPressed: () => context.go(AppRouter.employees),
+                  onPressed: () => context.go(AppRouter.employeesFor(role)),
                   child: const Text('View All'),
                 ),
               ],
@@ -284,7 +294,7 @@ class AuthorityDashboardScreen extends StatelessWidget {
                     icon: Icons.people_outline,
                     message: 'No employees yet',
                     actionLabel: 'Add Employee',
-                    onAction: () => context.go(AppRouter.addEmployee),
+                    onAction: () => context.go(AppRouter.addEmployeeFor(role)),
                   );
                 }
 
@@ -308,8 +318,9 @@ class AuthorityDashboardScreen extends StatelessWidget {
 
 class _WelcomeHeader extends StatelessWidget {
   final String userName;
+  final UserRole role;
 
-  const _WelcomeHeader({required this.userName});
+  const _WelcomeHeader({required this.userName, required this.role});
 
   @override
   Widget build(BuildContext context) {
@@ -372,9 +383,9 @@ class _WelcomeHeader extends StatelessWidget {
                     color: AppTheme.primaryYellow.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child: const Text(
-                    'Company Authority',
-                    style: TextStyle(
+                  child: Text(
+                    role == UserRole.hr ? 'HR Manager' : 'Admin',
+                    style: const TextStyle(
                       color: AppTheme.primaryYellow,
                       fontSize: 11,
                       fontWeight: FontWeight.w600,

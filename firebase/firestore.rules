@@ -12,17 +12,23 @@ service cloud.firestore {
       return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
     }
 
-    // Helper function to check if user is authority
-    function isAuthority() {
-      return isAuth() && getRole() == "authority";
+    // Role checks
+    function isAdmin() {
+      return isAuth() && (getRole() == "admin" || getRole() == "authority");
     }
 
-    // Helper function to check if user is employee
+    function isHR() {
+      return isAuth() && getRole() == "hr";
+    }
+
+    function isAdminOrHR() {
+      return isAdmin() || isHR();
+    }
+
     function isEmployee() {
       return isAuth() && getRole() == "employee";
     }
 
-    // Helper function to check if user is regular
     function isRegular() {
       return isAuth() && getRole() == "regular";
     }
@@ -30,40 +36,40 @@ service cloud.firestore {
     // Users collection - users can only read/write their own document
     match /users/{uid} {
       allow read, write: if request.auth.uid == uid;
-      // Authority can read all users
-      allow read: if isAuthority();
+      // Admin and HR can read all users
+      allow read: if isAdminOrHR();
     }
 
     // Transactions collection - users can only access their own transactions
     match /transactions/{txnId} {
-      // Read and update existing transactions
       allow read, update, delete: if isAuth() && resource.data.userId == request.auth.uid;
-      // Create new transaction with own userId
       allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
-      // Authority can read all transactions
-      allow read: if isAuthority();
+      // Admin can read all transactions
+      allow read: if isAdmin();
     }
 
     // Budgets collection - users can only access their own budgets
     match /budgets/{budgetId} {
       allow read, update, delete: if isAuth() && resource.data.userId == request.auth.uid;
       allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
-      // Authority can read all budgets
-      allow read: if isAuthority();
+      // Admin can read all budgets
+      allow read: if isAdmin();
     }
 
-    // Employees collection - only authority can write, employees can read their own
+    // Employees collection - admin and HR can write, employees can read their own
     match /employees/{empId} {
-      // Authority has full access
-      allow read, write: if isAuthority();
+      // Admin and HR have full access
+      allow read, write: if isAdminOrHR();
       // Employee can read their own employee document
       allow read: if isAuth() && resource.data.uid == request.auth.uid;
     }
 
-    // Projects collection - authority can write, all can read
+    // Projects collection - admin can write, HR and employees can read
     match /projects/{projectId} {
-      // Authority has full access
-      allow read, write: if isAuthority();
+      // Admin has full access
+      allow read, write: if isAdmin();
+      // HR can read projects
+      allow read: if isHR();
       // Employees can read projects (to see assignments)
       allow read: if isAuth();
     }
@@ -76,21 +82,21 @@ service cloud.firestore {
         get(/databases/$(database)/documents/employees/$(employeeDocId)).data.uid == request.auth.uid;
     }
 
-    // Tasks collection - authority can write, employees can read/update their own
+    // Tasks collection - admin can write, HR can read, employees can read/update their own
     match /tasks/{taskId} {
-      // Authority has full access
-      allow read, write: if isAuthority();
+      // Admin has full access
+      allow read, write: if isAdmin();
+      // HR can read all tasks
+      allow read: if isHR();
       // Employee can read and update (status) their own tasks
-      // employeeId stores the Firestore document ID of the employee record
       allow read, update: if isEmployeeOwner(resource.data.employeeId);
     }
 
-    // Payslips collection - authority can write, employees can read their own
+    // Payslips collection - admin and HR can write, employees can read their own
     match /payslips/{payslipId} {
-      // Authority has full access
-      allow read, write: if isAuthority();
+      // Admin and HR have full access
+      allow read, write: if isAdminOrHR();
       // Employee can read their own payslips only
-      // employeeId stores the Firestore document ID of the employee record
       allow read: if isEmployeeOwner(resource.data.employeeId);
     }
 
@@ -98,10 +104,10 @@ service cloud.firestore {
     match /notifications/{notifId} {
       // Users can read and update (mark as read) their own notifications
       allow read, update: if isAuth() && resource.data.targetUid == request.auth.uid;
-      // Any authenticated user can create notifications (for system-triggered notifications)
+      // Any authenticated user can create notifications
       allow create: if isAuth();
-      // Authority can read all notifications
-      allow read: if isAuthority();
+      // Admin can read all notifications
+      allow read: if isAdmin();
     }
   }
 }

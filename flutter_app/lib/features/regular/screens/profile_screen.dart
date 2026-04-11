@@ -213,8 +213,10 @@ class ProfileScreen extends StatelessWidget {
     switch (role) {
       case UserRole.regular:
         return 'Regular User';
-      case UserRole.authority:
-        return 'Company Authority';
+      case UserRole.admin:
+        return 'Admin';
+      case UserRole.hr:
+        return 'HR';
       case UserRole.employee:
         return 'Employee';
     }
@@ -543,8 +545,10 @@ class _ProfileHeader extends StatelessWidget {
     switch (role) {
       case UserRole.regular:
         return 'Regular User';
-      case UserRole.authority:
-        return 'Company Authority';
+      case UserRole.admin:
+        return 'Admin';
+      case UserRole.hr:
+        return 'HR';
       case UserRole.employee:
         return 'Employee';
     }

@@ -17,7 +17,7 @@ import '../features/regular/screens/budgets_screen.dart';
 import '../features/regular/screens/profile_screen.dart';
 import '../features/regular/screens/notifications_screen.dart';
 
-// Authority screens
+// Admin screens (previously authority)
 import '../features/authority/screens/authority_dashboard_screen.dart';
 import '../features/authority/screens/employees_screen.dart';
 import '../features/authority/screens/add_employee_screen.dart';
@@ -46,15 +46,22 @@ class AppRouter {
   static const String budgets = '/regular/budgets';
   static const String profile = '/regular/profile';
 
-  // Authority routes
-  static const String authorityDashboard = '/authority';
-  static const String employees = '/authority/employees';
-  static const String addEmployee = '/authority/employees/add';
-  static const String projects = '/authority/projects';
-  static const String addProject = '/authority/projects/add';
-  static const String projectDetail = '/authority/projects/:projectId';
-  static const String payslips = '/authority/payslips';
-  static const String generatePayslip = '/authority/payslips/generate';
+  // Admin routes (full management)
+  static const String adminDashboard = '/admin';
+  static const String employees = '/admin/employees';
+  static const String addEmployee = '/admin/employees/add';
+  static const String projects = '/admin/projects';
+  static const String addProject = '/admin/projects/add';
+  static const String projectDetail = '/admin/projects/:projectId';
+  static const String payslips = '/admin/payslips';
+  static const String generatePayslip = '/admin/payslips/generate';
+
+  // HR routes (employee + payslip management)
+  static const String hrDashboard = '/hr';
+  static const String hrEmployees = '/hr/employees';
+  static const String hrAddEmployee = '/hr/employees/add';
+  static const String hrPayslips = '/hr/payslips';
+  static const String hrGeneratePayslip = '/hr/payslips/generate';
 
   // Employee routes
   static const String employeeDashboard = '/employee';
@@ -62,10 +69,22 @@ class AppRouter {
   static const String myPayslips = '/employee/payslips';
   static const String employeeProfile = '/employee/profile';
 
-  // Shared routes (accessible from all role shells via push)
+  // Shared notification routes
   static const String regularNotifications = '/regular/notifications';
-  static const String authorityNotifications = '/authority/notifications';
+  static const String adminNotifications = '/admin/notifications';
+  static const String hrNotifications = '/hr/notifications';
   static const String employeeNotifications = '/employee/notifications';
+
+  /// Returns the correct route for shared management screens based on user role.
+  /// HR screens mirror admin screens but under /hr prefix.
+  static String employeesFor(UserRole role) =>
+      role == UserRole.hr ? hrEmployees : employees;
+  static String addEmployeeFor(UserRole role) =>
+      role == UserRole.hr ? hrAddEmployee : addEmployee;
+  static String payslipsFor(UserRole role) =>
+      role == UserRole.hr ? hrPayslips : payslips;
+  static String generatePayslipFor(UserRole role) =>
+      role == UserRole.hr ? hrGeneratePayslip : generatePayslip;
 
   GoRouter router(AuthProvider authProvider) {
     return GoRouter(
@@ -100,19 +119,21 @@ class AppRouter {
           if (user != null) {
             final location = state.matchedLocation;
 
-            // Regular users can only access /regular/* routes
             if (user.role == UserRole.regular &&
                 !location.startsWith('/regular')) {
               return regularDashboard;
             }
 
-            // Authority can access /authority/* routes
-            if (user.role == UserRole.authority &&
-                !location.startsWith('/authority')) {
-              return authorityDashboard;
+            if (user.role == UserRole.admin &&
+                !location.startsWith('/admin')) {
+              return adminDashboard;
             }
 
-            // Employees can only access /employee/* routes
+            if (user.role == UserRole.hr &&
+                !location.startsWith('/hr')) {
+              return hrDashboard;
+            }
+
             if (user.role == UserRole.employee &&
                 !location.startsWith('/employee')) {
               return employeeDashboard;
@@ -179,15 +200,15 @@ class AppRouter {
           ],
         ),
 
-        // ============ AUTHORITY ROUTES ============
+        // ============ ADMIN ROUTES ============
         ShellRoute(
           builder: (context, state, child) {
-            return AuthorityShell(child: child);
+            return AdminShell(child: child);
           },
           routes: [
             GoRoute(
-              path: authorityDashboard,
-              name: 'authorityDashboard',
+              path: adminDashboard,
+              name: 'adminDashboard',
               builder: (context, state) => const AuthorityDashboardScreen(),
             ),
             GoRoute(
@@ -229,8 +250,47 @@ class AppRouter {
               builder: (context, state) => const GeneratePayslipScreen(),
             ),
             GoRoute(
-              path: authorityNotifications,
-              name: 'authorityNotifications',
+              path: adminNotifications,
+              name: 'adminNotifications',
+              builder: (context, state) => const NotificationsScreen(),
+            ),
+          ],
+        ),
+
+        // ============ HR ROUTES ============
+        ShellRoute(
+          builder: (context, state, child) {
+            return HRShell(child: child);
+          },
+          routes: [
+            GoRoute(
+              path: hrDashboard,
+              name: 'hrDashboard',
+              builder: (context, state) => const AuthorityDashboardScreen(),
+            ),
+            GoRoute(
+              path: hrEmployees,
+              name: 'hrEmployees',
+              builder: (context, state) => const EmployeesScreen(),
+            ),
+            GoRoute(
+              path: hrAddEmployee,
+              name: 'hrAddEmployee',
+              builder: (context, state) => const AddEmployeeScreen(),
+            ),
+            GoRoute(
+              path: hrPayslips,
+              name: 'hrPayslips',
+              builder: (context, state) => const PayslipsScreen(),
+            ),
+            GoRoute(
+              path: hrGeneratePayslip,
+              name: 'hrGeneratePayslip',
+              builder: (context, state) => const GeneratePayslipScreen(),
+            ),
+            GoRoute(
+              path: hrNotifications,
+              name: 'hrNotifications',
               builder: (context, state) => const NotificationsScreen(),
             ),
           ],
@@ -276,8 +336,10 @@ class AppRouter {
 
   String _getDashboardForRole(UserRole? role) {
     switch (role) {
-      case UserRole.authority:
-        return authorityDashboard;
+      case UserRole.admin:
+        return adminDashboard;
+      case UserRole.hr:
+        return hrDashboard;
       case UserRole.employee:
         return employeeDashboard;
       case UserRole.regular:
@@ -355,11 +417,11 @@ class RegularShell extends StatelessWidget {
   }
 }
 
-/// Shell for Authority with bottom navigation
-class AuthorityShell extends StatelessWidget {
+/// Shell for Admin with bottom navigation
+class AdminShell extends StatelessWidget {
   final Widget child;
 
-  const AuthorityShell({super.key, required this.child});
+  const AdminShell({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -406,7 +468,7 @@ class AuthorityShell extends StatelessWidget {
   void _onDestinationSelected(BuildContext context, int index) {
     switch (index) {
       case 0:
-        context.go(AppRouter.authorityDashboard);
+        context.go(AppRouter.adminDashboard);
         break;
       case 1:
         context.go(AppRouter.employees);
@@ -416,6 +478,63 @@ class AuthorityShell extends StatelessWidget {
         break;
       case 3:
         context.go(AppRouter.payslips);
+        break;
+    }
+  }
+}
+
+/// Shell for HR with bottom navigation
+class HRShell extends StatelessWidget {
+  final Widget child;
+
+  const HRShell({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: child,
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _getSelectedIndex(context),
+        onDestinationSelected: (index) =>
+            _onDestinationSelected(context, index),
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.dashboard_outlined),
+            selectedIcon: Icon(Icons.dashboard),
+            label: 'Dashboard',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.people_outline),
+            selectedIcon: Icon(Icons.people),
+            label: 'Employees',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.payment_outlined),
+            selectedIcon: Icon(Icons.payment),
+            label: 'Payslips',
+          ),
+        ],
+      ),
+    );
+  }
+
+  int _getSelectedIndex(BuildContext context) {
+    final location = GoRouterState.of(context).matchedLocation;
+    if (location.startsWith(AppRouter.hrEmployees)) return 1;
+    if (location.startsWith(AppRouter.hrPayslips)) return 2;
+    return 0;
+  }
+
+  void _onDestinationSelected(BuildContext context, int index) {
+    switch (index) {
+      case 0:
+        context.go(AppRouter.hrDashboard);
+        break;
+      case 1:
+        context.go(AppRouter.hrEmployees);
+        break;
+      case 2:
+        context.go(AppRouter.hrPayslips);
         break;
     }
   }

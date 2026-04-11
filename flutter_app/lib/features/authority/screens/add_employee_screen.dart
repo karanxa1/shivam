@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 
 import '../../../core/firebase/firestore_service.dart';
 import '../../../core/models/employee.dart';
+import '../../../core/models/user.dart';
+import '../../../core/providers/auth_provider.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/validators.dart';
 import '../../../routes/app_router.dart';
@@ -41,7 +43,10 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
         title: const Text('Add Employee'),
         leading: IconButton(
           icon: const Icon(Icons.close),
-          onPressed: () => context.go(AppRouter.employees),
+          onPressed: () {
+            final role = context.read<AuthProvider>().appUser?.role ?? UserRole.admin;
+            context.go(AppRouter.employeesFor(role));
+          },
         ),
       ),
       body: Form(
@@ -263,7 +268,8 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
             backgroundColor: AppTheme.successColor,
           ),
         );
-        context.go(AppRouter.employees);
+        final role = context.read<AuthProvider>().appUser?.role ?? UserRole.admin;
+        context.go(AppRouter.employeesFor(role));
       }
     } catch (e) {
       if (mounted) {

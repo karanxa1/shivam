@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 
 import '../../../core/firebase/firestore_service.dart';
 import '../../../core/models/employee.dart';
+import '../../../core/models/user.dart';
+import '../../../core/providers/auth_provider.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../routes/app_router.dart';
@@ -22,6 +24,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
   @override
   Widget build(BuildContext context) {
     final firestoreService = context.read<FirestoreService>();
+    final role = context.read<AuthProvider>().appUser?.role ?? UserRole.admin;
 
     return Scaffold(
       appBar: AppBar(
@@ -108,7 +111,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                         ? 'No employees match your filters'
                         : 'No employees yet',
                     actionLabel: 'Add Employee',
-                    onAction: () => context.go(AppRouter.addEmployee),
+                    onAction: () => context.go(AppRouter.addEmployeeFor(role)),
                   );
                 }
 
@@ -183,7 +186,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.go(AppRouter.addEmployee),
+        onPressed: () => context.go(AppRouter.addEmployeeFor(role)),
         icon: const Icon(Icons.person_add),
         label: const Text('Add'),
       ),

@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import '../../../core/firebase/firestore_service.dart';
 import '../../../core/models/employee.dart';
 import '../../../core/models/payslip.dart';
+import '../../../core/models/user.dart';
+import '../../../core/providers/auth_provider.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../routes/app_router.dart';
@@ -23,6 +25,7 @@ class _PayslipsScreenState extends State<PayslipsScreen> {
   @override
   Widget build(BuildContext context) {
     final firestoreService = context.read<FirestoreService>();
+    final role = context.read<AuthProvider>().appUser?.role ?? UserRole.admin;
 
     return Scaffold(
       appBar: AppBar(
@@ -158,7 +161,7 @@ class _PayslipsScreenState extends State<PayslipsScreen> {
                         message:
                             'No payslips for ${_formatMonthDisplay(_selectedMonth)}',
                         actionLabel: 'Generate Payslips',
-                        onAction: () => context.go(AppRouter.generatePayslip),
+                        onAction: () => context.go(AppRouter.generatePayslipFor(role)),
                       );
                     }
 
@@ -243,7 +246,7 @@ class _PayslipsScreenState extends State<PayslipsScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.go(AppRouter.generatePayslip),
+        onPressed: () => context.go(AppRouter.generatePayslipFor(role)),
         icon: const Icon(Icons.add),
         label: const Text('Generate'),
       ),

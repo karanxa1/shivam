@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-enum UserRole { regular, authority, employee }
+enum UserRole { admin, hr, employee, regular }
 
 class AppUser {
   final String uid;
@@ -46,8 +46,12 @@ class AppUser {
   // Helper to convert string to UserRole enum
   static UserRole _roleFromString(String role) {
     switch (role) {
-      case 'authority':
-        return UserRole.authority;
+      case 'admin':
+        return UserRole.admin;
+      case 'authority': // backward compat
+        return UserRole.admin;
+      case 'hr':
+        return UserRole.hr;
       case 'employee':
         return UserRole.employee;
       case 'regular':
@@ -59,8 +63,10 @@ class AppUser {
   // Helper to convert UserRole enum to string
   static String _roleToString(UserRole role) {
     switch (role) {
-      case UserRole.authority:
-        return 'authority';
+      case UserRole.admin:
+        return 'admin';
+      case UserRole.hr:
+        return 'hr';
       case UserRole.employee:
         return 'employee';
       case UserRole.regular:

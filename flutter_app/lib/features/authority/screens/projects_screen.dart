@@ -142,7 +142,7 @@ class _ProjectList extends StatelessWidget {
         final project = projects[index];
         return _ProjectCard(
           project: project,
-          onTap: () => context.go('/authority/projects/${project.id}'),
+          onTap: () => context.go('/admin/projects/${project.id}'),
         );
       },
     );

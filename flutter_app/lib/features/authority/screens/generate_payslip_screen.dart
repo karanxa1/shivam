@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import '../../../core/firebase/firestore_service.dart';
 import '../../../core/models/employee.dart';
 import '../../../core/models/payslip.dart';
+import '../../../core/models/user.dart';
+import '../../../core/providers/auth_provider.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../routes/app_router.dart';
@@ -32,7 +34,10 @@ class _GeneratePayslipScreenState extends State<GeneratePayslipScreen> {
         title: const Text('Generate Payslips'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go(AppRouter.payslips),
+          onPressed: () {
+            final role = context.read<AuthProvider>().appUser?.role ?? UserRole.admin;
+            context.go(AppRouter.payslipsFor(role));
+          },
         ),
       ),
       body: StreamBuilder<List<Employee>>(
@@ -79,7 +84,10 @@ class _GeneratePayslipScreenState extends State<GeneratePayslipScreen> {
                     ),
                     const SizedBox(height: 24),
                     ElevatedButton.icon(
-                      onPressed: () => context.go(AppRouter.addEmployee),
+                      onPressed: () {
+                        final role = context.read<AuthProvider>().appUser?.role ?? UserRole.admin;
+                        context.go(AppRouter.addEmployeeFor(role));
+                      },
                       icon: const Icon(Icons.person_add),
                       label: const Text('Add Employee'),
                     ),
@@ -402,7 +410,8 @@ class _GeneratePayslipScreenState extends State<GeneratePayslipScreen> {
           ),
         );
 
-        context.go(AppRouter.payslips);
+        final role = context.read<AuthProvider>().appUser?.role ?? UserRole.admin;
+        context.go(AppRouter.payslipsFor(role));
       }
     } catch (e) {
       if (mounted) {
