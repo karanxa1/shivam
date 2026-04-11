@@ -48,10 +48,17 @@ async function addUser({ email, name, role }) {
   }
 }
 
-console.log('\n Adding users to nessbid-1...\n');
-for (const u of users) await addUser(u);
-console.log('\n Done.\n');
-console.log('  karanravirajput@gmail.com  →  authority  (karan@1234)');
-console.log('  karanrajputxa@gmail.com    →  regular    (karan@1234)');
-console.log('  datemenot1234@gmail.com    →  regular    (karan@1234)\n');
-process.exit(0);
+async function main() {
+  console.log('\n Adding users to nessbid-1...\n');
+  for (const u of users) await addUser(u);
+  console.log('\n Done.\n');
+  console.log('  pinjareshivam@gmail.com  →  authority  (password1234)');
+  console.log('  shyampawar@gmail.com    →  regular    (password1234)');
+  console.log('  yashsh6055@gmail.com    →  regular    (password1234)\n');
+  process.exit(0);
+}
+
+main().catch((e) => {
+  console.error('\n❌ Failed:', e.message ?? e);
+  process.exit(1);
+});
