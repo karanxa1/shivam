@@ -1,2 +1,4 @@
 firebase/service-account.json
 firebase/node_modules/
+node_modules/
+webapp/node_modules/
