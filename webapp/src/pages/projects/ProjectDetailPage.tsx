@@ -149,7 +149,7 @@ export default function ProjectDetailPage() {
                   {project.assignedEmployeeIds.length} assigned
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                  <CheckCircle2 className="h-4 w-4 text-blue-700" />
                   {doneTasks.length}/{tasks.length} tasks done
                 </span>
               </div>
@@ -259,8 +259,8 @@ export default function ProjectDetailPage() {
           <TaskColumn
             title="Pending"
             icon={Circle}
-            iconColor="text-yellow-400"
-            headerBg="bg-yellow-400/5 border-yellow-400/20"
+            iconColor="text-sky-700"
+            headerBg="bg-sky-500/5 border-sky-500/20"
             tasks={pendingTasks}
             employees={employees}
             onStatusChange={handleUpdateTaskStatus}
@@ -279,8 +279,8 @@ export default function ProjectDetailPage() {
           <TaskColumn
             title="Done"
             icon={CheckCircle2}
-            iconColor="text-emerald-400"
-            headerBg="bg-emerald-400/5 border-emerald-400/20"
+            iconColor="text-blue-700"
+            headerBg="bg-blue-500/5 border-blue-500/20"
             tasks={doneTasks}
             employees={employees}
             onStatusChange={handleUpdateTaskStatus}

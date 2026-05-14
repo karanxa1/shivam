@@ -225,7 +225,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
               style: const TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: AppTheme.darkTextPrimary,
               ),
               textAlign: TextAlign.center,
               decoration: InputDecoration(
@@ -253,7 +253,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
               textCapitalization: TextCapitalization.sentences,
               validator: (value) =>
                   Validators.required(value, fieldName: 'Title'),
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(color: AppTheme.darkTextPrimary),
               decoration: const InputDecoration(
                 labelText: 'Title',
                 prefixIcon: Icon(Icons.title_outlined),
@@ -293,7 +293,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   children: [
                     Text(
                       '${_date.day}/${_date.month}/${_date.year}',
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(color: AppTheme.darkTextPrimary),
                     ),
                     const Icon(Icons.arrow_drop_down),
                   ],
@@ -307,7 +307,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
               controller: _noteController,
               maxLines: 3,
               textCapitalization: TextCapitalization.sentences,
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(color: AppTheme.darkTextPrimary),
               decoration: const InputDecoration(
                 labelText: 'Note (optional)',
                 prefixIcon: Icon(Icons.notes_outlined),
@@ -363,7 +363,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                           vertical: 10,
                         ),
                       ),
-                      dropdownColor: AppTheme.darkCard,
+              dropdownColor: AppTheme.amoledBlack,
                       items: const [
                         DropdownMenuItem(
                           value: 'daily',
@@ -401,7 +401,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                         height: 24,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          color: AppTheme.amoledBlack,
+                          color: Colors.white,
                         ),
                       )
                     : const Text('Save Transaction'),

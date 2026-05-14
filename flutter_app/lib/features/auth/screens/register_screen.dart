@@ -63,7 +63,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: AppTheme.darkTextPrimary),
           onPressed: () => context.go(AppRouter.login),
         ),
       ),
@@ -79,7 +79,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 Text(
                   'Create Account',
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: Colors.white,
+                    color: AppTheme.darkTextPrimary,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -99,7 +99,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   textInputAction: TextInputAction.next,
                   textCapitalization: TextCapitalization.words,
                   validator: Validators.name,
-                  style: const TextStyle(color: Colors.white),
+                  style: const TextStyle(color: AppTheme.darkTextPrimary),
                   decoration: const InputDecoration(
                     labelText: 'Full Name',
                     prefixIcon: Icon(Icons.person_outlined),
@@ -113,7 +113,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
                   validator: Validators.email,
-                  style: const TextStyle(color: Colors.white),
+                  style: const TextStyle(color: AppTheme.darkTextPrimary),
                   decoration: const InputDecoration(
                     labelText: 'Email',
                     prefixIcon: Icon(Icons.email_outlined),
@@ -181,7 +181,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   obscureText: _obscurePassword,
                   textInputAction: TextInputAction.next,
                   validator: Validators.password,
-                  style: const TextStyle(color: Colors.white),
+                  style: const TextStyle(color: AppTheme.darkTextPrimary),
                   decoration: InputDecoration(
                     labelText: 'Password',
                     prefixIcon: const Icon(Icons.lock_outlined),
@@ -209,7 +209,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     value,
                     _passwordController.text,
                   ),
-                  style: const TextStyle(color: Colors.white),
+                  style: const TextStyle(color: AppTheme.darkTextPrimary),
                   decoration: InputDecoration(
                     labelText: 'Confirm Password',
                     prefixIcon: const Icon(Icons.lock_outlined),
@@ -243,7 +243,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 height: 24,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: AppTheme.amoledBlack,
+                                  color: Colors.white,
                                 ),
                               )
                             : const Text('Create Account'),
@@ -300,7 +300,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         icon: const Icon(Icons.g_mobiledata, size: 24),
                         label: const Text('Continue with Google'),
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: Colors.white,
+                          foregroundColor: AppTheme.darkTextPrimary,
                           side: BorderSide(color: AppTheme.darkDivider),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -380,7 +380,7 @@ class _RoleOption extends StatelessWidget {
             Text(
               title,
               style: TextStyle(
-                color: isSelected ? AppTheme.primaryYellow : Colors.white,
+                color: isSelected ? AppTheme.primaryYellow : AppTheme.darkTextPrimary,
                 fontWeight: FontWeight.w600,
               ),
             ),

@@ -27,11 +27,11 @@ import { formatCurrency, formatCurrencyCompact, formatDateShort, getCurrentMonth
 import type { TransactionType } from '@/types';
 
 function typeColor(type: TransactionType) {
-  return type === 'income' ? 'text-emerald-400' : 'text-destructive';
+  return type === 'income' ? 'text-blue-700' : 'text-sky-700';
 }
 
 function typeBg(type: TransactionType) {
-  return type === 'income' ? 'bg-emerald-400/10' : 'bg-destructive/10';
+  return type === 'income' ? 'bg-blue-500/10' : 'bg-sky-500/10';
 }
 
 export default function PersonalDashboardPage() {
@@ -86,8 +86,8 @@ export default function PersonalDashboardPage() {
       label: 'Income This Month',
       value: formatCurrencyCompact(totalIncome),
       icon: TrendingUp,
-      color: 'text-emerald-400',
-      bg: 'bg-emerald-400/10',
+      color: 'text-blue-700',
+      bg: 'bg-blue-500/10',
     },
     {
       label: 'Expenses This Month',
@@ -166,12 +166,12 @@ export default function PersonalDashboardPage() {
                 <AreaChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
                   <defs>
                     <linearGradient id="incomeGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                      <stop offset="5%" stopColor="#2563eb" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
                     </linearGradient>
                     <linearGradient id="expenseGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+                      <stop offset="5%" stopColor="#60a5fa" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#60a5fa" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
@@ -182,8 +182,8 @@ export default function PersonalDashboardPage() {
                     formatter={(v) => (typeof v === 'number' ? formatCurrency(v) : String(v))}
                   />
                   <Legend wrapperStyle={{ fontSize: '11px' }} />
-                  <Area type="monotone" dataKey="income" name="Income" stroke="#10b981" strokeWidth={2} fill="url(#incomeGrad)" />
-                  <Area type="monotone" dataKey="expenses" name="Expenses" stroke="#ef4444" strokeWidth={2} fill="url(#expenseGrad)" />
+                  <Area type="monotone" dataKey="income" name="Income" stroke="#2563eb" strokeWidth={2} fill="url(#incomeGrad)" />
+                  <Area type="monotone" dataKey="expenses" name="Expenses" stroke="#60a5fa" strokeWidth={2} fill="url(#expenseGrad)" />
                 </AreaChart>
               </ResponsiveContainer>
             )}
@@ -216,7 +216,7 @@ export default function PersonalDashboardPage() {
                 <div key={tx.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-muted/30">
                   <div className={`p-1.5 rounded-lg shrink-0 ${typeBg(tx.type)}`}>
                     {tx.type === 'income'
-                      ? <TrendingUp className="h-3.5 w-3.5 text-emerald-400" />
+                      ? <TrendingUp className="h-3.5 w-3.5 text-blue-700" />
                       : <TrendingDown className="h-3.5 w-3.5 text-destructive" />}
                   </div>
                   <div className="flex-1 min-w-0">

@@ -3,49 +3,46 @@ import 'package:flutter/services.dart';
 import 'package:flutter_app/core/models/user.dart';
 
 class AppTheme {
-  // AMOLED Black color
-  static const Color amoledBlack = Color(0xFF000000);
-  static const Color darkSurface = Color(0xFF0A0A0A);
-  static const Color darkCard = Color(0xFF121212);
-  static const Color darkDivider = Color(0xFF1F1F1F);
+  // Blue and white brand palette used by every screen.
+  static const Color amoledBlack = Color(0xFFF8FBFF);
+  static const Color darkSurface = Color(0xFFFFFFFF);
+  static const Color darkCard = Color(0xFFFFFFFF);
+  static const Color darkDivider = Color(0xFFD7E6FF);
 
-  // Yellow accent colors
-  static const Color primaryYellow = Color(0xFFFFD700); // Gold yellow
-  static const Color accentYellow = Color(0xFFFFEB3B); // Bright yellow
-  static const Color darkYellow = Color(0xFFFFC107); // Amber yellow
-  static const Color lightYellow = Color(
-    0xFFFFF8E1,
-  ); // Light yellow for backgrounds
+  static const Color primaryYellow = Color(0xFF2563EB);
+  static const Color accentYellow = Color(0xFF60A5FA);
+  static const Color darkYellow = Color(0xFF1D4ED8);
+  static const Color lightYellow = Color(0xFFDBEAFE);
 
   // Text colors
-  static const Color darkTextPrimary = Color(0xFFFFFFFF);
-  static const Color darkTextSecondary = Color(0xFFB3B3B3);
-  static const Color darkTextTertiary = Color(0xFF757575);
+  static const Color darkTextPrimary = Color(0xFF0F172A);
+  static const Color darkTextSecondary = Color(0xFF475569);
+  static const Color darkTextTertiary = Color(0xFF64748B);
 
   static const Color lightTextPrimary = Color(0xFF000000);
   static const Color lightTextSecondary = Color(0xFF666666);
   static const Color lightTextTertiary = Color(0xFF999999);
 
-  // ============ DARK THEME (AMOLED Black + Yellow) ============
+  // ============ DARK THEME (Blue + White) ============
   static ThemeData darkTheme() {
     return ThemeData(
       useMaterial3: true,
-      brightness: Brightness.dark,
+      brightness: Brightness.light,
       scaffoldBackgroundColor: amoledBlack,
-      colorScheme: const ColorScheme.dark(
-        brightness: Brightness.dark,
+      colorScheme: const ColorScheme.light(
+        brightness: Brightness.light,
         primary: primaryYellow,
-        onPrimary: amoledBlack,
-        primaryContainer: Color(0xFF3D3000),
+        onPrimary: Colors.white,
+        primaryContainer: lightYellow,
         onPrimaryContainer: lightYellow,
         secondary: accentYellow,
-        onSecondary: amoledBlack,
-        secondaryContainer: Color(0xFF3D3000),
+        onSecondary: Colors.white,
+        secondaryContainer: Color(0xFFEAF2FF),
         onSecondaryContainer: lightYellow,
         tertiary: darkYellow,
-        onTertiary: amoledBlack,
-        error: Color(0xFFCF6679),
-        onError: amoledBlack,
+        onTertiary: Colors.white,
+        error: Color(0xFF1E40AF),
+        onError: Colors.white,
         surface: darkSurface,
         onSurface: darkTextPrimary,
         surfaceContainerHighest: darkCard,
@@ -59,8 +56,8 @@ class AppTheme {
         surfaceTintColor: Colors.transparent,
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light,
-          statusBarBrightness: Brightness.dark,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
         ),
       ),
       cardTheme: CardThemeData(
@@ -88,7 +85,7 @@ class AppTheme {
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFCF6679)),
+          borderSide: const BorderSide(color: Color(0xFF1E40AF)),
         ),
         labelStyle: const TextStyle(color: darkTextSecondary),
         hintStyle: const TextStyle(color: darkTextTertiary),
@@ -271,7 +268,7 @@ class AppTheme {
     );
   }
 
-  // ============ LIGHT THEME (Clean White + Yellow) ============
+  // ============ LIGHT THEME (Clean White + Blue) ============
   static ThemeData lightTheme() {
     return ThemeData(
       useMaterial3: true,
@@ -282,19 +279,19 @@ class AppTheme {
         primary: darkYellow,
         onPrimary: Colors.white,
         primaryContainer: lightYellow,
-        onPrimaryContainer: Color(0xFF3D3000),
+        onPrimaryContainer: Color(0xFF1E3A8A),
         secondary: primaryYellow,
         onSecondary: Colors.black,
-        secondaryContainer: Color(0xFFFFF3C4),
-        onSecondaryContainer: Color(0xFF3D3000),
+        secondaryContainer: Color(0xFFEAF2FF),
+        onSecondaryContainer: Color(0xFF1E3A8A),
         tertiary: accentYellow,
         onTertiary: Colors.black,
-        error: Color(0xFFB00020),
+        error: Color(0xFF1E40AF),
         onError: Colors.white,
         surface: Colors.white,
         onSurface: lightTextPrimary,
-        surfaceContainerHighest: Color(0xFFF5F5F5),
-        outline: Color(0xFFE0E0E0),
+        surfaceContainerHighest: Color(0xFFF8FBFF),
+        outline: Color(0xFFD7E6FF),
       ),
       appBarTheme: AppBarTheme(
         centerTitle: true,
@@ -316,14 +313,14 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: const Color(0xFFF5F5F5),
+        fillColor: const Color(0xFFF8FBFF),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+          borderSide: const BorderSide(color: Color(0xFFD7E6FF)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+          borderSide: const BorderSide(color: Color(0xFFD7E6FF)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -331,7 +328,7 @@ class AppTheme {
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFB00020)),
+          borderSide: const BorderSide(color: Color(0xFF1E40AF)),
         ),
         labelStyle: const TextStyle(color: lightTextSecondary),
         hintStyle: const TextStyle(color: lightTextTertiary),
@@ -398,14 +395,14 @@ class AppTheme {
         }),
       ),
       dividerTheme: const DividerThemeData(
-        color: Color(0xFFE0E0E0),
+        color: Color(0xFFD7E6FF),
         thickness: 1,
       ),
       chipTheme: ChipThemeData(
-        backgroundColor: const Color(0xFFF5F5F5),
+        backgroundColor: const Color(0xFFF8FBFF),
         selectedColor: darkYellow.withValues(alpha: 0.2),
         labelStyle: const TextStyle(color: lightTextPrimary),
-        side: const BorderSide(color: Color(0xFFE0E0E0)),
+        side: const BorderSide(color: Color(0xFFD7E6FF)),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       dialogTheme: DialogThemeData(
@@ -426,8 +423,8 @@ class AppTheme {
       ),
       progressIndicatorTheme: const ProgressIndicatorThemeData(
         color: darkYellow,
-        linearTrackColor: Color(0xFFE0E0E0),
-        circularTrackColor: Color(0xFFE0E0E0),
+        linearTrackColor: Color(0xFFD7E6FF),
+        circularTrackColor: Color(0xFFD7E6FF),
       ),
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith((states) {
@@ -440,7 +437,7 @@ class AppTheme {
           if (states.contains(WidgetState.selected)) {
             return darkYellow.withValues(alpha: 0.3);
           }
-          return const Color(0xFFE0E0E0);
+          return const Color(0xFFD7E6FF);
         }),
       ),
       checkboxTheme: CheckboxThemeData(
@@ -525,10 +522,10 @@ class AppTheme {
   }
 
   // Common status colors
-  static const Color successColor = Color(0xFF4CAF50);
-  static const Color warningColor = Color(0xFFFF9800);
-  static const Color errorColor = Color(0xFFF44336);
-  static const Color infoColor = Color(0xFF2196F3);
+  static const Color successColor = Color(0xFF2563EB);
+  static const Color warningColor = Color(0xFF60A5FA);
+  static const Color errorColor = Color(0xFF1E40AF);
+  static const Color infoColor = Color(0xFF3B82F6);
 
   // Budget status colors
   static Color getBudgetStatusColor(double percentage) {
@@ -551,25 +548,25 @@ class AppTheme {
 
   // Project status colors
   static const Map<String, Color> projectStatusColors = {
-    'pending': Color(0xFFFF9800),
-    'active': Color(0xFF2196F3),
-    'completed': Color(0xFF4CAF50),
+    'pending': Color(0xFF60A5FA),
+    'active': Color(0xFF2563EB),
+    'completed': Color(0xFF1D4ED8),
   };
 
   // Task status colors
   static const Map<String, Color> taskStatusColors = {
-    'pending': Color(0xFFFF9800),
-    'inProgress': Color(0xFF2196F3),
-    'done': Color(0xFF4CAF50),
+    'pending': Color(0xFF60A5FA),
+    'inProgress': Color(0xFF2563EB),
+    'done': Color(0xFF1D4ED8),
   };
 
   // Payslip status colors
   static const Map<String, Color> payslipStatusColors = {
-    'pending': Color(0xFFFF9800),
-    'paid': Color(0xFF4CAF50),
+    'pending': Color(0xFF60A5FA),
+    'paid': Color(0xFF1D4ED8),
   };
 
-  // Role badge colors (subtle yellow tints)
+  // Role badge colors (subtle blue tints)
   static Color getRoleBadgeColor(UserRole role, {bool isDark = true}) {
     if (isDark) {
       return primaryYellow.withValues(alpha: 0.15);

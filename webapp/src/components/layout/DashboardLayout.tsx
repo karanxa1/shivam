@@ -71,7 +71,7 @@ function NotificationBellIcon({ type }: { type: NotificationType }) {
   switch (type) {
     case 'task_assigned': return <ClipboardCheck className="h-3.5 w-3.5 text-blue-400" />;
     case 'payslip_generated': return <Receipt className="h-3.5 w-3.5 text-primary" />;
-    case 'task_done': return <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />;
+    case 'task_done': return <CheckCircle2 className="h-3.5 w-3.5 text-blue-700" />;
     case 'task_overdue': return <AlertCircle className="h-3.5 w-3.5 text-destructive" />;
     default: return <Bell className="h-3.5 w-3.5 text-muted-foreground" />;
   }
@@ -491,8 +491,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                           onClick={() => { navigate('/tasks'); setSearchOpen(false); }}
                           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-muted/50 transition-colors text-left"
                         >
-                          <div className="w-7 h-7 rounded-lg bg-yellow-400/15 border border-yellow-400/20 flex items-center justify-center shrink-0">
-                            <ListTodo className="h-3.5 w-3.5 text-yellow-400" />
+                          <div className="w-7 h-7 rounded-lg bg-sky-500/15 border border-sky-500/20 flex items-center justify-center shrink-0">
+                            <ListTodo className="h-3.5 w-3.5 text-sky-700" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-foreground truncate">{task.title}</p>

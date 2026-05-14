@@ -504,7 +504,7 @@ class _ProfileHeader extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
-                color: AppTheme.amoledBlack,
+                color: Colors.white,
               ),
             ),
           ),
@@ -614,7 +614,7 @@ class _InfoTile extends StatelessWidget {
       ),
       subtitle: Text(
         value,
-        style: const TextStyle(color: Colors.white, fontSize: 15),
+        style: const TextStyle(color: AppTheme.darkTextPrimary, fontSize: 15),
       ),
       trailing: onTap != null
           ? const Icon(Icons.edit, size: 18, color: AppTheme.primaryYellow)

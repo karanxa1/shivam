@@ -127,11 +127,11 @@ export default function EmployeesPage() {
   // Department color map
   const deptColors: Record<string, string> = {
     engineering: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-    design: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
-    marketing: 'bg-pink-500/10 text-pink-400 border-pink-500/20',
+    design: 'bg-indigo-500/10 text-indigo-700 border-indigo-500/20',
+    marketing: 'bg-sky-500/10 text-sky-700 border-sky-500/20',
     finance: 'bg-primary/10 text-primary border-primary/20',
-    hr: 'bg-green-500/10 text-green-400 border-green-500/20',
-    sales: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
+    hr: 'bg-blue-500/10 text-blue-700 border-blue-500/20',
+    sales: 'bg-sky-500/10 text-sky-700 border-sky-500/20',
   };
 
   const getDeptColor = (dept: string) =>

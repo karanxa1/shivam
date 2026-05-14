@@ -296,8 +296,8 @@ export default function TasksPage() {
           label="Pending"
           count={pendingCount}
           icon={Circle}
-          color="text-yellow-400"
-          bg="bg-yellow-400/10"
+          color="text-sky-700"
+          bg="bg-sky-500/10"
         />
         <StatCard
           label="In Progress"
@@ -310,8 +310,8 @@ export default function TasksPage() {
           label="Done"
           count={doneCount}
           icon={CheckCircle2}
-          color="text-emerald-400"
-          bg="bg-emerald-400/10"
+          color="text-blue-700"
+          bg="bg-blue-500/10"
         />
       </div>
 
@@ -525,7 +525,7 @@ export default function TasksPage() {
                 size="sm"
                 variant="outline"
                 onClick={() => handleBulkStatusUpdate('pending')}
-                className="h-7 text-xs border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/10"
+                className="h-7 text-xs border-sky-500/30 text-sky-700 hover:bg-sky-500/10"
               >
                 Pending
               </Button>
@@ -541,7 +541,7 @@ export default function TasksPage() {
                 size="sm"
                 variant="outline"
                 onClick={() => handleBulkStatusUpdate('done')}
-                className="h-7 text-xs border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10"
+                className="h-7 text-xs border-blue-500/30 text-blue-700 hover:bg-blue-500/10"
               >
                 Done
               </Button>

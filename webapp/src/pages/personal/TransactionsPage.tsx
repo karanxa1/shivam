@@ -52,15 +52,15 @@ const CATEGORIES = [
 ];
 
 const categoryColors: Record<string, string> = {
-  salary: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-  food: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
+  salary: 'bg-blue-500/10 text-blue-700 border-blue-500/20',
+  food: 'bg-sky-500/10 text-sky-700 border-sky-500/20',
   transport: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-  entertainment: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
-  utilities: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
-  shopping: 'bg-pink-500/10 text-pink-400 border-pink-500/20',
-  health: 'bg-red-500/10 text-red-400 border-red-500/20',
+  entertainment: 'bg-indigo-500/10 text-indigo-700 border-indigo-500/20',
+  utilities: 'bg-blue-500/10 text-blue-700 border-blue-500/20',
+  shopping: 'bg-sky-500/10 text-sky-700 border-sky-500/20',
+  health: 'bg-blue-600/10 text-blue-800 border-blue-600/20',
   education: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
-  investment: 'bg-teal-500/10 text-teal-400 border-teal-500/20',
+  investment: 'bg-indigo-500/10 text-indigo-700 border-indigo-500/20',
   other: 'bg-muted text-muted-foreground border-border',
 };
 
@@ -282,12 +282,12 @@ export default function TransactionsPage() {
         <div className="grid grid-cols-2 gap-4">
           <Card className="bg-card border-border">
             <CardContent className="p-4 flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-emerald-400/10 shrink-0">
-                <TrendingUp className="h-4 w-4 text-emerald-400" />
+              <div className="p-2 rounded-lg bg-blue-500/10 shrink-0">
+                <TrendingUp className="h-4 w-4 text-blue-700" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground uppercase tracking-wide">Total Income</p>
-                <p className="text-lg font-bold text-emerald-400">{formatCurrency(totalIncome)}</p>
+                <p className="text-lg font-bold text-blue-700">{formatCurrency(totalIncome)}</p>
               </div>
             </CardContent>
           </Card>
@@ -385,7 +385,7 @@ export default function TransactionsPage() {
                     </TableCell>
                     <TableCell className="text-muted-foreground text-sm">{formatDateShort(tx.date)}</TableCell>
                     <TableCell>
-                      <div className={`flex items-center gap-1.5 text-xs font-medium ${tx.type === 'income' ? 'text-emerald-400' : 'text-destructive'}`}>
+                      <div className={`flex items-center gap-1.5 text-xs font-medium ${tx.type === 'income' ? 'text-blue-700' : 'text-sky-700'}`}>
                         {tx.type === 'income'
                           ? <TrendingUp className="h-3.5 w-3.5" />
                           : <TrendingDown className="h-3.5 w-3.5" />}
@@ -393,7 +393,7 @@ export default function TransactionsPage() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <span className={`font-bold text-sm ${tx.type === 'income' ? 'text-emerald-400' : 'text-destructive'}`}>
+                      <span className={`font-bold text-sm ${tx.type === 'income' ? 'text-blue-700' : 'text-sky-700'}`}>
                         {tx.type === 'income' ? '+' : '-'}{formatCurrency(tx.amount)}
                       </span>
                     </TableCell>

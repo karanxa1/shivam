@@ -572,7 +572,7 @@ class _StatusOption extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                color: isSelected ? color : Colors.white,
+                color: isSelected ? color : AppTheme.darkTextPrimary,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
               ),
             ),

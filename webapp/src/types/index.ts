@@ -124,4 +124,5 @@ export interface DashboardStats {
   activeProjects: number;
   pendingTasks: number;
   totalPayroll: number;
+  totalPayslips: number;
 }

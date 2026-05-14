@@ -23,7 +23,7 @@ function NotificationIcon({ type }: { type: NotificationType }) {
     case 'payslip_generated':
       return <Receipt className="h-4 w-4 text-primary" />;
     case 'task_done':
-      return <CheckCircle2 className="h-4 w-4 text-emerald-400" />;
+      return <CheckCircle2 className="h-4 w-4 text-blue-700" />;
     case 'task_overdue':
       return <AlertCircle className="h-4 w-4 text-destructive" />;
     default:
@@ -38,7 +38,7 @@ function notificationBg(type: NotificationType): string {
     case 'payslip_generated':
       return 'bg-primary/10';
     case 'task_done':
-      return 'bg-emerald-400/10';
+      return 'bg-blue-500/10';
     case 'task_overdue':
       return 'bg-destructive/10';
     default:

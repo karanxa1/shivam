@@ -171,7 +171,7 @@ export default function MyPayslipsPage() {
                   <TableRow key={p.id} className="border-border hover:bg-muted/30 transition-colors">
                     <TableCell className="pl-6 font-medium text-foreground text-sm">{formatMonthYear(p.month)}</TableCell>
                     <TableCell className="text-muted-foreground text-sm">{formatCurrency(p.basicSalary)}</TableCell>
-                    <TableCell className="text-emerald-400 text-sm">+{formatCurrency(p.overtimePay)}</TableCell>
+                    <TableCell className="text-blue-700 text-sm">+{formatCurrency(p.overtimePay)}</TableCell>
                     <TableCell className="text-destructive text-sm">-{formatCurrency(p.deductions)}</TableCell>
                     <TableCell className="pr-6 font-bold text-primary text-sm">{formatCurrency(p.netPay)}</TableCell>
                   </TableRow>

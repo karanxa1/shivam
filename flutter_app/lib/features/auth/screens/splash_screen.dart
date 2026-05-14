@@ -84,7 +84,7 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                       TextSpan(
                         text: 'Manager',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: AppTheme.darkTextPrimary),
                       ),
                     ],
                   ),

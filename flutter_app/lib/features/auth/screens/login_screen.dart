@@ -117,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       TextSpan(
                         text: 'Manager',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: AppTheme.darkTextPrimary),
                       ),
                     ],
                   ),
@@ -139,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
                   validator: Validators.email,
-                  style: const TextStyle(color: Colors.white),
+                  style: const TextStyle(color: AppTheme.darkTextPrimary),
                   decoration: const InputDecoration(
                     labelText: 'Email',
                     prefixIcon: Icon(Icons.email_outlined),
@@ -153,7 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   obscureText: _obscurePassword,
                   textInputAction: TextInputAction.done,
                   validator: Validators.password,
-                  style: const TextStyle(color: Colors.white),
+                  style: const TextStyle(color: AppTheme.darkTextPrimary),
                   onFieldSubmitted: (_) => _handleLogin(),
                   decoration: InputDecoration(
                     labelText: 'Password',
@@ -197,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 height: 24,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: AppTheme.amoledBlack,
+                                  color: Colors.white,
                                 ),
                               )
                             : const Text('Sign In'),
@@ -238,7 +238,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: 22,
                           width: 22,
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: AppTheme.darkTextPrimary,
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: const Center(
@@ -254,7 +254,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         label: const Text('Continue with Google'),
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: Colors.white,
+                          foregroundColor: AppTheme.darkTextPrimary,
                           side: BorderSide(color: AppTheme.darkDivider),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),

@@ -225,7 +225,7 @@ class _NotificationTile extends StatelessWidget {
       case 'task_status_changed':
         return Icons.check_circle_outline;
       case 'task_overdue':
-        return Icons.warning_amber;
+        return Icons.info_outline;
       default:
         return Icons.notifications;
     }

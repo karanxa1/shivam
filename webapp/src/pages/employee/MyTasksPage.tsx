@@ -12,7 +12,6 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { useAuth } from '@/contexts/AuthContext';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -152,8 +151,8 @@ export default function MyTasksPage() {
       <div className="grid grid-cols-3 gap-4">
         <Card className="bg-card border-border">
           <CardContent className="p-4 flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-yellow-500/10 shrink-0">
-              <Clock className="h-4 w-4 text-yellow-400" />
+            <div className="p-2 rounded-lg bg-sky-500/10 shrink-0">
+              <Clock className="h-4 w-4 text-sky-700" />
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Pending</p>

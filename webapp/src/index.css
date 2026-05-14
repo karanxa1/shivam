@@ -52,108 +52,91 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* AMOLED Black + Yellow Theme - Dark Mode Only */
-/* Force dark mode always */
+/* Blue + White Theme */
 html {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 :root {
-  /* AMOLED Black backgrounds */
-  --background: #000000;
-  --foreground: #FAFAFA;
-  --card: #0A0A0A;
-  --card-foreground: #FAFAFA;
-  --popover: #0A0A0A;
-  --popover-foreground: #FAFAFA;
-  
-  /* Yellow/Gold as primary */
-  --primary: #FFD700;
-  --primary-foreground: #000000;
-  
-  /* Dark secondary */
-  --secondary: #1A1A1A;
-  --secondary-foreground: #FAFAFA;
-  
-  /* Muted grays */
-  --muted: #171717;
-  --muted-foreground: #A3A3A3;
-  
-  /* Amber accent */
-  --accent: #FFC107;
-  --accent-foreground: #000000;
-  
-  /* Status colors */
-  --destructive: #DC2626;
-  --destructive-foreground: #FAFAFA;
-  --success: #22C55E;
-  --success-foreground: #000000;
-  --warning: #FFEB3B;
-  --warning-foreground: #000000;
-  
-  /* Borders and inputs */
-  --border: #262626;
-  --input: #262626;
-  --ring: #FFD700;
-  
-  /* Chart colors - yellow/gold spectrum */
-  --chart-1: #FFD700;
-  --chart-2: #FFC107;
-  --chart-3: #FFEB3B;
-  --chart-4: #FFB300;
-  --chart-5: #FF8F00;
+  --background: #F8FBFF;
+  --foreground: #0F172A;
+  --card: #FFFFFF;
+  --card-foreground: #0F172A;
+  --popover: #FFFFFF;
+  --popover-foreground: #0F172A;
+  --primary: #2563EB;
+  --primary-foreground: #FFFFFF;
+  --secondary: #EAF2FF;
+  --secondary-foreground: #1E3A8A;
+  --muted: #EEF5FF;
+  --muted-foreground: #64748B;
+  --accent: #DBEAFE;
+  --accent-foreground: #1D4ED8;
+  --destructive: #1E40AF;
+  --destructive-foreground: #FFFFFF;
+  --success: #2563EB;
+  --success-foreground: #FFFFFF;
+  --warning: #60A5FA;
+  --warning-foreground: #0F172A;
+  --border: #D7E6FF;
+  --input: #D7E6FF;
+  --ring: #2563EB;
+  --chart-1: #1D4ED8;
+  --chart-2: #2563EB;
+  --chart-3: #3B82F6;
+  --chart-4: #60A5FA;
+  --chart-5: #93C5FD;
   
   --radius: 0.625rem;
   
-  /* Sidebar - slightly lighter than pure black */
-  --sidebar: #050505;
-  --sidebar-foreground: #FAFAFA;
-  --sidebar-primary: #FFD700;
-  --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #1A1A1A;
-  --sidebar-accent-foreground: #FAFAFA;
-  --sidebar-border: #262626;
-  --sidebar-ring: #FFD700;
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #0F172A;
+  --sidebar-primary: #2563EB;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #EAF2FF;
+  --sidebar-accent-foreground: #1E3A8A;
+  --sidebar-border: #D7E6FF;
+  --sidebar-ring: #2563EB;
 }
 
-/* Dark class (same as root for AMOLED theme) */
+/* Keep dark class aligned with the blue system for libraries that add it. */
 .dark {
-  --background: #000000;
-  --foreground: #FAFAFA;
-  --card: #0A0A0A;
-  --card-foreground: #FAFAFA;
-  --popover: #0A0A0A;
-  --popover-foreground: #FAFAFA;
-  --primary: #FFD700;
-  --primary-foreground: #000000;
-  --secondary: #1A1A1A;
-  --secondary-foreground: #FAFAFA;
-  --muted: #171717;
-  --muted-foreground: #A3A3A3;
-  --accent: #FFC107;
-  --accent-foreground: #000000;
-  --destructive: #DC2626;
-  --destructive-foreground: #FAFAFA;
-  --success: #22C55E;
-  --success-foreground: #000000;
-  --warning: #FFEB3B;
-  --warning-foreground: #000000;
-  --border: #262626;
-  --input: #262626;
-  --ring: #FFD700;
-  --chart-1: #FFD700;
-  --chart-2: #FFC107;
-  --chart-3: #FFEB3B;
-  --chart-4: #FFB300;
-  --chart-5: #FF8F00;
-  --sidebar: #050505;
-  --sidebar-foreground: #FAFAFA;
-  --sidebar-primary: #FFD700;
-  --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #1A1A1A;
-  --sidebar-accent-foreground: #FAFAFA;
-  --sidebar-border: #262626;
-  --sidebar-ring: #FFD700;
+  --background: #F8FBFF;
+  --foreground: #0F172A;
+  --card: #FFFFFF;
+  --card-foreground: #0F172A;
+  --popover: #FFFFFF;
+  --popover-foreground: #0F172A;
+  --primary: #2563EB;
+  --primary-foreground: #FFFFFF;
+  --secondary: #EAF2FF;
+  --secondary-foreground: #1E3A8A;
+  --muted: #EEF5FF;
+  --muted-foreground: #64748B;
+  --accent: #DBEAFE;
+  --accent-foreground: #1D4ED8;
+  --destructive: #1E40AF;
+  --destructive-foreground: #FFFFFF;
+  --success: #2563EB;
+  --success-foreground: #FFFFFF;
+  --warning: #60A5FA;
+  --warning-foreground: #0F172A;
+  --border: #D7E6FF;
+  --input: #D7E6FF;
+  --ring: #2563EB;
+  --chart-1: #1D4ED8;
+  --chart-2: #2563EB;
+  --chart-3: #3B82F6;
+  --chart-4: #60A5FA;
+  --chart-5: #93C5FD;
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #0F172A;
+  --sidebar-primary: #2563EB;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #EAF2FF;
+  --sidebar-accent-foreground: #1E3A8A;
+  --sidebar-border: #D7E6FF;
+  --sidebar-ring: #2563EB;
 }
 
 @layer base {
@@ -174,7 +157,7 @@ html {
   }
 }
 
-/* Custom scrollbar for AMOLED theme */
+/* Custom scrollbar for blue theme */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;

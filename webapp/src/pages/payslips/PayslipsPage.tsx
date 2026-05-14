@@ -76,8 +76,8 @@ function printPayslip(payslip: Payslip, employeeName: string) {
     .earnings-table th:last-child { text-align: right; }
     .earnings-table td { padding: 10px 12px; border-top: 1px solid #f1f5f9; font-size: 13px; }
     .earnings-table td:last-child { text-align: right; font-weight: 600; }
-    .earnings-table tr.positive td:last-child { color: #10b981; }
-    .earnings-table tr.negative td:last-child { color: #ef4444; }
+    .earnings-table tr.positive td:last-child { color: #2563eb; }
+    .earnings-table tr.negative td:last-child { color: #60a5fa; }
     .net-pay { display: flex; justify-content: space-between; align-items: center; background: #f0f0ff; border: 2px solid #6366f1; border-radius: 10px; padding: 16px 20px; margin-top: 20px; }
     .net-pay-label { font-size: 14px; font-weight: 700; color: #1a1a2e; }
     .net-pay-amount { font-size: 24px; font-weight: 800; color: #6366f1; }
@@ -280,7 +280,7 @@ export default function PayslipsPage() {
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between items-center">
                       <span className="text-muted-foreground flex items-center gap-1.5">
-                        <TrendingUp className="h-3.5 w-3.5 text-emerald-400" />
+                        <TrendingUp className="h-3.5 w-3.5 text-blue-700" />
                         Basic Salary
                       </span>
                       <span className="text-foreground font-medium">{formatCurrency(selectedEmployee.salary)}</span>
@@ -437,7 +437,7 @@ export default function PayslipsPage() {
                         {formatCurrency(payslip.basicSalary)}
                       </TableCell>
                       <TableCell>
-                        <span className="text-emerald-400 text-sm flex items-center gap-1">
+                        <span className="text-blue-700 text-sm flex items-center gap-1">
                           <TrendingUp className="h-3 w-3" />
                           {formatCurrency(payslip.overtimePay)}
                         </span>

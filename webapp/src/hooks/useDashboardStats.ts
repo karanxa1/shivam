@@ -12,6 +12,7 @@ export function useDashboardStats() {
     activeProjects: 0,
     pendingTasks: 0,
     totalPayroll: 0,
+    totalPayslips: 0,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -80,6 +81,19 @@ export function useDashboardStats() {
       }, (err) => {
         console.error('Error fetching tasks stats:', err);
         setLoading(false);
+      })
+    );
+
+    // Count payslips (for HR dashboard)
+    const payslipsQuery = query(collection(db, 'payslips'));
+    unsubscribes.push(
+      onSnapshot(payslipsQuery, (snapshot) => {
+        setStats((prev) => ({
+          ...prev,
+          totalPayslips: snapshot.size,
+        }));
+      }, (err) => {
+        console.error('Error fetching payslips stats:', err);
       })
     );
 

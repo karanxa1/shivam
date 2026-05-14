@@ -564,7 +564,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                     Text(
                       _getStatusLabel(status),
                       style: TextStyle(
-                        color: isSelected ? color : Colors.white,
+                        color: isSelected ? color : AppTheme.darkTextPrimary,
                         fontWeight: isSelected
                             ? FontWeight.w600
                             : FontWeight.normal,
@@ -709,7 +709,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                               });
                             },
                             activeColor: AppTheme.primaryYellow,
-                            checkColor: AppTheme.amoledBlack,
+                            checkColor: Colors.white,
                             title: Text(employee.name),
                             subtitle: Text(employee.department),
                           );

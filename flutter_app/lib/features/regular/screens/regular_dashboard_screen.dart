@@ -168,7 +168,7 @@ class _BalanceCard extends StatelessWidget {
                   Text(
                     'Total Balance',
                     style: TextStyle(
-                      color: AppTheme.amoledBlack.withValues(alpha: 0.7),
+                      color: AppTheme.darkTextSecondary,
                       fontSize: 14,
                     ),
                   ),
@@ -184,7 +184,7 @@ class _BalanceCard extends StatelessWidget {
                     child: Text(
                       'This Month',
                       style: TextStyle(
-                        color: AppTheme.amoledBlack.withValues(alpha: 0.7),
+                        color: AppTheme.darkTextSecondary,
                         fontSize: 12,
                       ),
                     ),
@@ -208,7 +208,7 @@ class _BalanceCard extends StatelessWidget {
                       icon: Icons.arrow_downward,
                       label: 'Income',
                       amount: totalIncome,
-                      color: Colors.green.shade800,
+                      color: AppTheme.darkYellow,
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -217,7 +217,7 @@ class _BalanceCard extends StatelessWidget {
                       icon: Icons.arrow_upward,
                       label: 'Expense',
                       amount: totalExpense,
-                      color: Colors.red.shade800,
+                      color: AppTheme.accentYellow,
                     ),
                   ),
                 ],
@@ -269,14 +269,14 @@ class _BalanceItem extends StatelessWidget {
                 Text(
                   label,
                   style: TextStyle(
-                    color: AppTheme.amoledBlack.withValues(alpha: 0.7),
+                    color: AppTheme.darkTextSecondary,
                     fontSize: 12,
                   ),
                 ),
                 Text(
                   Formatters.currencyCompact(amount),
                   style: const TextStyle(
-                    color: AppTheme.amoledBlack,
+                  color: AppTheme.darkTextPrimary,
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),

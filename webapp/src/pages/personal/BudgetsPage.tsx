@@ -187,7 +187,7 @@ export default function BudgetsPage() {
           <Card className="bg-card border-border">
             <CardContent className="p-4">
               <p className="text-xs text-muted-foreground uppercase tracking-wide">Over Budget</p>
-              <p className={cn('text-xl font-bold mt-1', overBudgetCount > 0 ? 'text-destructive' : 'text-emerald-400')}>
+              <p className={cn('text-xl font-bold mt-1', overBudgetCount > 0 ? 'text-sky-700' : 'text-blue-700')}>
                 {overBudgetCount} categor{overBudgetCount !== 1 ? 'ies' : 'y'}
               </p>
             </CardContent>
@@ -232,8 +232,8 @@ export default function BudgetsPage() {
                           isOver
                             ? 'border-destructive/30 text-destructive bg-destructive/10'
                             : pct >= 80
-                              ? 'border-yellow-500/30 text-yellow-400 bg-yellow-500/10'
-                              : 'border-emerald-500/30 text-emerald-400 bg-emerald-500/10'
+                              ? 'border-sky-500/30 text-sky-700 bg-sky-500/10'
+                              : 'border-blue-500/30 text-blue-700 bg-blue-500/10'
                         )}
                       >
                         {pct}%
@@ -254,7 +254,7 @@ export default function BudgetsPage() {
                       value={pct}
                       className={cn(
                         'h-2 bg-muted',
-                        isOver ? '[&>div]:bg-destructive' : pct >= 80 ? '[&>div]:bg-yellow-400' : '[&>div]:bg-emerald-400'
+                        isOver ? '[&>div]:bg-sky-600' : pct >= 80 ? '[&>div]:bg-sky-400' : '[&>div]:bg-blue-600'
                       )}
                     />
                     <div className="flex justify-between text-xs">

@@ -183,9 +183,9 @@ export default function EmployeeProfilePage() {
       {/* Stats Row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <MiniStat label="Total Tasks" value={tasks.length} icon={ListTodo} color="text-primary" />
-        <MiniStat label="Pending" value={pendingTasks} icon={Circle} color="text-yellow-400" />
+        <MiniStat label="Pending" value={pendingTasks} icon={Circle} color="text-sky-700" />
         <MiniStat label="In Progress" value={inProgressTasks} icon={Clock} color="text-blue-400" />
-        <MiniStat label="Completed" value={doneTasks} icon={CheckCircle2} color="text-emerald-400" />
+        <MiniStat label="Completed" value={doneTasks} icon={CheckCircle2} color="text-blue-700" />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">

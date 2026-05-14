@@ -33,26 +33,27 @@ service cloud.firestore {
       return isAuth() && getRole() == "regular";
     }
 
-    // Users collection - users can only read/write their own document
+    // Users collection
     match /users/{uid} {
-      allow read, write: if request.auth.uid == uid;
-      // Admin and HR can read all users
-      allow read: if isAdminOrHR();
+      allow read: if request.auth.uid == uid || isAdminOrHR();
+      allow create: if request.auth.uid == uid;
+      allow update: if request.auth.uid == uid || isAdmin();
+      allow delete: if isAdmin();
     }
 
     // Transactions collection - users can only access their own transactions
+    // Admin can read/write all (for seeding / reporting)
     match /transactions/{txnId} {
       allow read, update, delete: if isAuth() && resource.data.userId == request.auth.uid;
-      allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
-      // Admin can read all transactions
+      allow create: if isAuth() && (request.resource.data.userId == request.auth.uid || isAdmin());
       allow read: if isAdmin();
     }
 
     // Budgets collection - users can only access their own budgets
+    // Admin can read/write all (for seeding / reporting)
     match /budgets/{budgetId} {
       allow read, update, delete: if isAuth() && resource.data.userId == request.auth.uid;
-      allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
-      // Admin can read all budgets
+      allow create: if isAuth() && (request.resource.data.userId == request.auth.uid || isAdmin());
       allow read: if isAdmin();
     }
 

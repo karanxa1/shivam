@@ -375,7 +375,7 @@ class _PreviewRow extends StatelessWidget {
         Text(
           value,
           style: TextStyle(
-            color: color ?? Colors.white,
+            color: color ?? AppTheme.darkTextPrimary,
             fontWeight: isBold ? FontWeight.bold : FontWeight.w600,
             fontSize: isBold ? 18 : 14,
           ),

@@ -388,7 +388,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
           data: Theme.of(context).copyWith(
             colorScheme: Theme.of(context).colorScheme.copyWith(
               primary: AppTheme.primaryYellow,
-              onPrimary: AppTheme.amoledBlack,
+              onPrimary: Colors.white,
             ),
           ),
           child: child!,
@@ -465,7 +465,7 @@ class _EmployeeCheckTile extends StatelessWidget {
       value: isSelected,
       onChanged: onChanged,
       activeColor: AppTheme.primaryYellow,
-      checkColor: AppTheme.amoledBlack,
+      checkColor: Colors.white,
       title: Text(
         employee.name,
         style: const TextStyle(fontWeight: FontWeight.w500),

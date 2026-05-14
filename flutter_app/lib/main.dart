@@ -18,10 +18,10 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-      statusBarBrightness: Brightness.dark,
+      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.light,
       systemNavigationBarColor: AppTheme.amoledBlack,
-      systemNavigationBarIconBrightness: Brightness.light,
+      systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
 
@@ -100,10 +100,10 @@ class _AppRootState extends State<AppRoot> {
           title: 'FinManager',
           debugShowCheckedModeBanner: false,
 
-          // Theme configuration - AMOLED Black + Yellow
+          // Theme configuration - Blue + White
           theme: AppTheme.lightTheme(),
           darkTheme: AppTheme.darkTheme(),
-          themeMode: ThemeMode.dark, // Default to dark theme (AMOLED)
+          themeMode: ThemeMode.light,
           // Router configuration
           routerConfig: _appRouter.router(authProvider),
         );

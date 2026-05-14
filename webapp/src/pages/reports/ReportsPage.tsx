@@ -25,7 +25,8 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 
-const COLORS = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#f97316'];
+const COLORS = ['#1d4ed8', '#2563eb', '#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe', '#dbeafe'];
+const STATUS_COLORS = ['#60a5fa', '#2563eb', '#1d4ed8'];
 
 const CustomTooltip = ({
   active,
@@ -127,9 +128,9 @@ export default function ReportsPage() {
     const inProgress = tasks.filter((t) => t.status === 'inProgress').length;
     const done = tasks.filter((t) => t.status === 'done').length;
     return [
-      { name: 'Pending', count: pending, fill: '#f59e0b' },
-      { name: 'In Progress', count: inProgress, fill: '#6366f1' },
-      { name: 'Done', count: done, fill: '#10b981' },
+      { name: 'Pending', count: pending, fill: '#60a5fa' },
+      { name: 'In Progress', count: inProgress, fill: '#2563eb' },
+      { name: 'Done', count: done, fill: '#1d4ed8' },
     ];
   }, [tasks]);
 
@@ -171,15 +172,15 @@ export default function ReportsPage() {
       label: 'Task Completion Rate',
       value: `${completionRate}%`,
       icon: CheckCircle2,
-      color: 'text-emerald-400',
-      bg: 'bg-emerald-400/10',
+      color: 'text-blue-700',
+      bg: 'bg-blue-500/10',
     },
     {
       label: 'Active Projects',
       value: activeProjects,
       icon: FolderKanban,
-      color: 'text-yellow-400',
-      bg: 'bg-yellow-400/10',
+      color: 'text-sky-700',
+      bg: 'bg-sky-500/10',
     },
   ];
 
@@ -388,7 +389,7 @@ export default function ReportsPage() {
                       paddingAngle={3}
                     >
                       {projectStatusData.map((_, index) => (
-                        <Cell key={index} fill={['#f59e0b', '#6366f1', '#10b981'][index % 3]} />
+                        <Cell key={index} fill={STATUS_COLORS[index % STATUS_COLORS.length]} />
                       ))}
                     </Pie>
                     <Tooltip content={<PieTooltip />} />
@@ -401,7 +402,7 @@ export default function ReportsPage() {
                         <div className="flex items-center gap-1.5">
                           <div
                             className="w-2.5 h-2.5 rounded-full"
-                            style={{ background: ['#f59e0b', '#6366f1', '#10b981'][index % 3] }}
+                            style={{ background: STATUS_COLORS[index % STATUS_COLORS.length] }}
                           />
                           <span className="text-foreground font-medium">{item.name}</span>
                         </div>
@@ -412,7 +413,7 @@ export default function ReportsPage() {
                           className="h-full rounded-full"
                           style={{
                             width: `${projects.length > 0 ? (item.value / projects.length) * 100 : 0}%`,
-                            background: ['#f59e0b', '#6366f1', '#10b981'][index % 3],
+                            background: STATUS_COLORS[index % STATUS_COLORS.length],
                           }}
                         />
                       </div>
