@@ -1,8 +1,9 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTransactions, useBudgets } from '@/hooks';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -22,9 +23,13 @@ import {
   TrendingDown,
   ArrowUpRight,
   Target,
+  Download,
+  Loader2,
 } from 'lucide-react';
 import { formatCurrency, formatCurrencyCompact, formatDateShort, getCurrentMonth } from '@/lib/utils/formatters';
+import { generateMonthlyFinanceReport, downloadCSV } from '@/lib/utils/reports';
 import type { TransactionType } from '@/types';
+import { toast } from 'sonner';
 
 function typeColor(type: TransactionType) {
   return type === 'income' ? 'text-blue-700' : 'text-sky-700';
@@ -39,6 +44,7 @@ export default function PersonalDashboardPage() {
   const { transactions, loading: txLoading } = useTransactions();
   const currentMonth = getCurrentMonth();
   const { budgets, loading: budgetLoading } = useBudgets(currentMonth);
+  const [generating, setGenerating] = useState(false);
 
   const displayName = appUser?.name || appUser?.email?.split('@')[0] || 'there';
 
@@ -55,7 +61,6 @@ export default function PersonalDashboardPage() {
   const netBalance = totalIncome - totalExpenses;
   const savingsRate = totalIncome > 0 ? Math.round((netBalance / totalIncome) * 100) : 0;
 
-  // Income vs expenses by month (last 6)
   const chartData = useMemo(() => {
     const map: Record<string, { income: number; expenses: number }> = {};
     transactions.forEach((t) => {
@@ -80,6 +85,36 @@ export default function PersonalDashboardPage() {
   }, [transactions]);
 
   const recentTransactions = transactions.slice(0, 5);
+
+  const handleDownloadPDF = async () => {
+    if (thisMonthTx.length === 0) {
+      toast.info('No transactions to include in report');
+      return;
+    }
+    setGenerating(true);
+    try {
+      await generateMonthlyFinanceReport(displayName, currentMonth, thisMonthTx, budgets);
+      toast.success('Report downloaded');
+    } catch {
+      toast.error('Failed to generate report');
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  const handleDownloadCSV = () => {
+    const headers = ['Date', 'Title', 'Category', 'Type', 'Amount', 'Note'];
+    const rows = thisMonthTx.map(t => [
+      formatDateShort(t.date),
+      t.title,
+      t.category,
+      t.type,
+      String(t.amount),
+      t.note || '',
+    ]);
+    downloadCSV(`transactions-${currentMonth}.csv`, headers, rows);
+    toast.success('CSV downloaded');
+  };
 
   const summaryCards = [
     {
@@ -115,13 +150,36 @@ export default function PersonalDashboardPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">
-          Welcome back, {displayName} 👋
-        </h1>
-        <p className="text-muted-foreground mt-0.5 text-sm">
-          Here's your personal finance overview for this month.
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">
+            Welcome back, {displayName} 👋
+          </h1>
+          <p className="text-muted-foreground mt-0.5 text-sm">
+            Here's your personal finance overview for this month.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="border-border text-foreground hover:bg-muted gap-1.5"
+            onClick={handleDownloadCSV}
+            disabled={thisMonthTx.length === 0}
+          >
+            <Download className="h-3.5 w-3.5" />
+            CSV
+          </Button>
+          <Button
+            size="sm"
+            className="bg-primary text-primary-foreground hover:bg-primary/90 gap-1.5"
+            onClick={handleDownloadPDF}
+            disabled={generating || thisMonthTx.length === 0}
+          >
+            {generating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />}
+            PDF Report
+          </Button>
+        </div>
       </div>
 
       {/* Summary Cards */}

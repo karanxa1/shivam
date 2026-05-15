@@ -256,7 +256,7 @@ function AppRoutes() {
       <Route path="/projects" element={<AdminRoute><ProjectsPage /></AdminRoute>} />
       <Route path="/projects/:projectId" element={<AdminRoute><ProjectDetailPage /></AdminRoute>} />
       <Route path="/tasks" element={<AdminRoute><TasksPage /></AdminRoute>} />
-      <Route path="/reports" element={<AdminRoute><ReportsPage /></AdminRoute>} />
+      <Route path="/reports" element={<ManagementRoute><ReportsPage /></ManagementRoute>} />
 
       {/* Employee Portal Routes */}
       <Route path="/employee" element={<EmployeeRoute><EmployeeDashboardPage /></EmployeeRoute>} />

@@ -16,6 +16,7 @@ import '../features/regular/screens/add_transaction_screen.dart';
 import '../features/regular/screens/budgets_screen.dart';
 import '../features/regular/screens/profile_screen.dart';
 import '../features/regular/screens/notifications_screen.dart';
+import '../features/regular/screens/reports_screen.dart';
 
 // Admin screens (previously authority)
 import '../features/authority/screens/authority_dashboard_screen.dart';
@@ -44,6 +45,7 @@ class AppRouter {
   static const String transactions = '/regular/transactions';
   static const String addTransaction = '/regular/transactions/add';
   static const String budgets = '/regular/budgets';
+  static const String reports = '/regular/reports';
   static const String profile = '/regular/profile';
 
   // Admin routes (full management)
@@ -186,6 +188,11 @@ class AppRouter {
               path: budgets,
               name: 'budgets',
               builder: (context, state) => const BudgetsScreen(),
+            ),
+            GoRoute(
+              path: reports,
+              name: 'reports',
+              builder: (context, state) => const ReportsScreen(),
             ),
             GoRoute(
               path: profile,

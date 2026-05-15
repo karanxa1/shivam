@@ -9,6 +9,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../../core/firebase/firestore_service.dart';
 import '../../../core/models/payslip.dart';
 import '../../../core/providers/auth_provider.dart';
+import '../../../core/services/pdf_service.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/formatters.dart';
 
@@ -34,6 +35,11 @@ class _MyPayslipsScreenState extends State<MyPayslipsScreen> {
       appBar: AppBar(
         title: const Text('My Payslips'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.picture_as_pdf_outlined),
+            tooltip: 'Export PDF',
+            onPressed: () => _exportPayslipsPdf(context, user.uid),
+          ),
           IconButton(
             icon: const Icon(Icons.download_outlined),
             tooltip: 'Export CSV',
@@ -160,6 +166,52 @@ class _MyPayslipsScreenState extends State<MyPayslipsScreen> {
         },
       ),
     );
+  }
+
+  Future<void> _exportPayslipsPdf(BuildContext context, String uid) async {
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      final firestoreService = context.read<FirestoreService>();
+      final employeeId = await firestoreService.getEmployeeDocIdByUid(uid);
+      if (employeeId == null) {
+        messenger.showSnackBar(
+          const SnackBar(
+            content: Text('Employee record not found'),
+            backgroundColor: AppTheme.errorColor,
+          ),
+        );
+        return;
+      }
+
+      final payslips = await firestoreService.getAllPayslipsForEmployee(employeeId);
+      if (payslips.isEmpty) {
+        messenger.showSnackBar(
+          const SnackBar(content: Text('No payslips to export')),
+        );
+        return;
+      }
+
+      final user = context.read<AuthProvider>().appUser;
+      await PdfService().generatePayslipHistoryReport(user?.name ?? 'Employee', payslips);
+
+      if (context.mounted) {
+        messenger.showSnackBar(
+          const SnackBar(
+            content: Text('Payslip report downloaded'),
+            backgroundColor: AppTheme.successColor,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text('Export failed: $e'),
+            backgroundColor: AppTheme.errorColor,
+          ),
+        );
+      }
+    }
   }
 
   Future<void> _exportPayslipsCsv(BuildContext context, String uid) async {

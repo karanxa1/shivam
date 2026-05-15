@@ -35,8 +35,10 @@ import {
   Circle,
   Trash2,
   TrendingUp,
+  FileDown,
 } from 'lucide-react';
 import { formatDateShort, getStatusColor, formatStatus } from '@/lib/utils/formatters';
+import { generateProjectReport } from '@/lib/utils/reports';
 import type { TaskStatus } from '@/types';
 import { Timestamp } from 'firebase/firestore';
 import { toast } from 'sonner';
@@ -49,6 +51,7 @@ export default function ProjectDetailPage() {
   const { employees } = useEmployees();
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGeneratingReport, setIsGeneratingReport] = useState(false);
 
   const handleAddTask = async (formData: FormData) => {
     if (!projectId) return;
@@ -86,6 +89,19 @@ export default function ProjectDetailPage() {
       toast.success('Task deleted');
     } catch {
       toast.error('Failed to delete task');
+    }
+  };
+
+  const handleDownloadProjectReport = async () => {
+    if (!project) return;
+    setIsGeneratingReport(true);
+    try {
+      await generateProjectReport(project, tasks, employees);
+      toast.success('Project report downloaded');
+    } catch {
+      toast.error('Failed to generate report');
+    } finally {
+      setIsGeneratingReport(false);
     }
   };
 
@@ -135,6 +151,20 @@ export default function ProjectDetailPage() {
                 <Badge variant="outline" className={`${getStatusColor(project.status)} border text-xs`}>
                   {formatStatus(project.status)}
                 </Badge>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-1.5 text-xs ml-auto"
+                  disabled={isGeneratingReport}
+                  onClick={handleDownloadProjectReport}
+                >
+                  {isGeneratingReport ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <FileDown className="h-3.5 w-3.5" />
+                  )}
+                  Report
+                </Button>
               </div>
               {project.description && (
                 <p className="text-sm text-muted-foreground mt-1 leading-relaxed">{project.description}</p>

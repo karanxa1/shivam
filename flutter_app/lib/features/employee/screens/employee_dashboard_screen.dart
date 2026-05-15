@@ -10,10 +10,69 @@ import '../../../core/models/task.dart';
 import '../../../core/providers/auth_provider.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/formatters.dart';
+import '../../../core/services/pdf_service.dart';
 import '../../../routes/app_router.dart';
 
-class EmployeeDashboardScreen extends StatelessWidget {
+class EmployeeDashboardScreen extends StatefulWidget {
   const EmployeeDashboardScreen({super.key});
+
+  @override
+  State<EmployeeDashboardScreen> createState() => _EmployeeDashboardScreenState();
+}
+
+class _EmployeeDashboardScreenState extends State<EmployeeDashboardScreen> {
+  bool _generatingReport = false;
+
+  Future<void> _downloadReport() async {
+    final authProvider = context.read<AuthProvider>();
+    final firestoreService = context.read<FirestoreService>();
+    final user = authProvider.appUser;
+    if (user == null) return;
+
+    setState(() => _generatingReport = true);
+
+    try {
+      final employee = await firestoreService.getEmployeeByUid(user.uid);
+      if (employee == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Employee profile not found')),
+          );
+        }
+        return;
+      }
+
+      final tasks = await firestoreService.tasksStream(employee.id!).first;
+      final payslips = await firestoreService.payslipsStream(employee.id!).first;
+      final now = DateTime.now();
+      final monthStr = '${now.year}-${now.month.toString().padLeft(2, '0')}';
+
+      final monthPayslip = payslips.isNotEmpty
+          ? payslips.firstWhere((p) => p.month == monthStr, orElse: () => payslips.first)
+          : null;
+
+      await PdfService().generateEmployeeMonthlyReport(
+        employee,
+        monthStr,
+        monthPayslip,
+        tasks,
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Report downloaded')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to generate report: $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _generatingReport = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +88,13 @@ class EmployeeDashboardScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Dashboard'),
         actions: [
+          IconButton(
+            icon: _generatingReport
+                ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                : const Icon(Icons.download),
+            tooltip: 'Download Monthly Report',
+            onPressed: _generatingReport ? null : _downloadReport,
+          ),
           _NotificationBellButton(
             notificationsRoute: AppRouter.employeeNotifications,
             uid: user.uid,

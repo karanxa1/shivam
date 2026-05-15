@@ -539,6 +539,23 @@ class FirestoreService {
         });
   }
 
+  Future<List<Task>> getTasksByUserUid(String userUid) async {
+    final empSnapshot = await _db
+        .collection('employees')
+        .where('uid', isEqualTo: userUid)
+        .limit(1)
+        .get();
+    if (empSnapshot.docs.isEmpty) return [];
+    final employeeDocId = empSnapshot.docs.first.id;
+    final snapshot = await _db
+        .collection('employees')
+        .doc(employeeDocId)
+        .collection('tasks')
+        .orderBy('dueDate')
+        .get();
+    return snapshot.docs.map((d) => Task.fromFirestore(d)).toList();
+  }
+
   // Listen to payslips for an employee using their Firebase Auth UID.
   // Resolves auth UID → employee doc ID so the query matches webapp-generated payslips.
   Stream<List<Payslip>> payslipsStreamByUserUid(String userUid) {

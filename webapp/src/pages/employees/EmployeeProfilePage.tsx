@@ -30,6 +30,7 @@ import {
   Pencil,
   Loader2,
   Circle,
+  FileText,
 } from 'lucide-react';
 import {
   formatCurrency,
@@ -42,6 +43,7 @@ import {
 import type { TaskStatus } from '@/types';
 import { toast } from 'sonner';
 import { useEmployees } from '@/hooks';
+import { generateFullEmployeeReport } from '@/lib/utils/reports';
 
 export default function EmployeeProfilePage() {
   const { employeeId } = useParams<{ employeeId: string }>();
@@ -54,6 +56,7 @@ export default function EmployeeProfilePage() {
 
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [generatingReport, setGeneratingReport] = useState(false);
 
   const assignedProjects = projects.filter((p) =>
     p.assignedEmployeeIds.includes(employeeId || '')
@@ -90,6 +93,22 @@ export default function EmployeeProfilePage() {
       toast.error('Failed to update employee');
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleDownloadReport = async () => {
+    if (!employee || payslips.length === 0) {
+      toast.info('No payslip data to include in report');
+      return;
+    }
+    setGeneratingReport(true);
+    try {
+      await generateFullEmployeeReport(employee, payslips, tasks);
+      toast.success('Employee report downloaded');
+    } catch {
+      toast.error('Failed to generate report');
+    } finally {
+      setGeneratingReport(false);
     }
   };
 
@@ -155,14 +174,27 @@ export default function EmployeeProfilePage() {
                 </div>
               </div>
             </div>
-            <Button
-              onClick={() => setIsEditOpen(true)}
-              variant="outline"
-              className="border-border text-foreground hover:bg-muted gap-2 shrink-0"
-            >
-              <Pencil className="h-4 w-4" />
-              Edit
-            </Button>
+            <div className="flex items-center gap-2 shrink-0">
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-border text-foreground hover:bg-muted gap-2"
+                onClick={handleDownloadReport}
+                disabled={generatingReport || payslips.length === 0}
+              >
+                {generatingReport ? <Loader2 className="h-4 w-4 animate-spin" /> : <FileText className="h-4 w-4" />}
+                PDF Report
+              </Button>
+              <Button
+                onClick={() => setIsEditOpen(true)}
+                variant="outline"
+                size="sm"
+                className="border-border text-foreground hover:bg-muted gap-2"
+              >
+                <Pencil className="h-4 w-4" />
+                Edit
+              </Button>
+            </div>
           </div>
 
           <Separator className="my-5 bg-border" />

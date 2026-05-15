@@ -39,8 +39,11 @@ import {
   TrendingDown,
   Minus,
   Printer,
+  FileDown,
+  Building2,
 } from 'lucide-react';
 import { formatCurrency, formatMonthYear, formatDateShort, getCurrentMonth } from '@/lib/utils/formatters';
+import { generateMonthlyPayrollReport, generateCompanyOverallReport } from '@/lib/utils/reports';
 import type { Employee, Payslip } from '@/types';
 import { toast } from 'sonner';
 
@@ -159,6 +162,8 @@ export default function PayslipsPage() {
   const [deductions, setDeductions] = useState<string>('0');
   const [payslipMonth, setPayslipMonth] = useState(getCurrentMonth());
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [reportMonth, setReportMonth] = useState<string>('all');
+  const [isGeneratingReport, setIsGeneratingReport] = useState(false);
 
   const uniqueMonths = [...new Set(payslips.map(p => p.month))].sort().reverse();
 
@@ -350,6 +355,72 @@ export default function PayslipsPage() {
           </Card>
         </div>
       )}
+
+      {/* Download Bar */}
+      <Card className="bg-card border-border">
+        <CardContent className="p-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <div className="flex items-center gap-2 text-foreground font-semibold text-sm min-w-[7rem]">
+              <FileDown className="h-4 w-4 text-primary" />
+              Export Reports
+            </div>
+            <Select value={reportMonth} onValueChange={(value) => setReportMonth(value || 'all')}>
+              <SelectTrigger className="w-full sm:w-48 bg-muted/50 border-border text-foreground h-9">
+                <SelectValue placeholder="Select month" />
+              </SelectTrigger>
+              <SelectContent className="bg-popover border-border">
+                <SelectItem value="all">All Months</SelectItem>
+                {uniqueMonths.map((month) => (
+                  <SelectItem key={month} value={month}>
+                    {formatMonthYear(month)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <div className="flex gap-2 w-full sm:w-auto">
+              <Button
+                variant="outline"
+                className="border-border text-foreground hover:bg-muted gap-2 flex-1 sm:flex-none"
+                disabled={isGeneratingReport || reportMonth === 'all'}
+                onClick={async () => {
+                  setIsGeneratingReport(true);
+                  try {
+                    const monthPayslips = payslips.filter(p => p.month === reportMonth);
+                    await generateMonthlyPayrollReport(reportMonth, employees, monthPayslips);
+                    toast.success('Monthly payroll report downloaded');
+                  } catch {
+                    toast.error('Failed to generate report');
+                  } finally {
+                    setIsGeneratingReport(false);
+                  }
+                }}
+              >
+                {isGeneratingReport && <Loader2 className="h-4 w-4 animate-spin" />}
+                Monthly Report
+              </Button>
+              <Button
+                className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 flex-1 sm:flex-none"
+                disabled={isGeneratingReport}
+                onClick={async () => {
+                  setIsGeneratingReport(true);
+                  try {
+                    await generateCompanyOverallReport(employees, payslips);
+                    toast.success('Company overview report downloaded');
+                  } catch {
+                    toast.error('Failed to generate report');
+                  } finally {
+                    setIsGeneratingReport(false);
+                  }
+                }}
+              >
+                {isGeneratingReport && <Loader2 className="h-4 w-4 animate-spin" />}
+                <Building2 className="h-4 w-4" />
+                Company Overview
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Search and Filter */}
       <div className="flex flex-col sm:flex-row gap-3">

@@ -11,9 +11,14 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../routes/app_router.dart';
 
-class RegularDashboardScreen extends StatelessWidget {
+class RegularDashboardScreen extends StatefulWidget {
   const RegularDashboardScreen({super.key});
 
+  @override
+  State<RegularDashboardScreen> createState() => _RegularDashboardScreenState();
+}
+
+class _RegularDashboardScreenState extends State<RegularDashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
@@ -323,7 +328,7 @@ class _QuickActions extends StatelessWidget {
           child: _QuickActionButton(
             icon: Icons.bar_chart,
             label: 'Reports',
-            onTap: () {},
+            onTap: () => context.go(AppRouter.reports),
           ),
         ),
       ],

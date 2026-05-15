@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../core/firebase/firestore_service.dart';
 import '../../../core/models/task.dart';
 import '../../../core/providers/auth_provider.dart';
+import '../../../core/services/pdf_service.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/formatters.dart';
 
@@ -44,6 +45,13 @@ class _MyTasksScreenState extends State<MyTasksScreen>
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Tasks'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.picture_as_pdf_outlined),
+            tooltip: 'Export PDF',
+            onPressed: () => _exportTasksPdf(context),
+          ),
+        ],
         bottom: TabBar(
           controller: _tabController,
           isScrollable: true,
@@ -168,6 +176,45 @@ class _MyTasksScreenState extends State<MyTasksScreen>
         return 'In Progress';
       case TaskStatus.done:
         return 'Done';
+    }
+  }
+
+  Future<void> _exportTasksPdf(BuildContext context) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final authProvider = context.read<AuthProvider>();
+    final firestoreService = context.read<FirestoreService>();
+    final user = authProvider.appUser;
+
+    if (user == null) return;
+
+    try {
+      final tasks = await firestoreService.getTasksByUserUid(user.uid);
+      if (tasks.isEmpty) {
+        messenger.showSnackBar(
+          const SnackBar(content: Text('No tasks to export')),
+        );
+        return;
+      }
+
+      await PdfService().generateTaskReport(user.name, tasks);
+
+      if (context.mounted) {
+        messenger.showSnackBar(
+          const SnackBar(
+            content: Text('Task report downloaded'),
+            backgroundColor: AppTheme.successColor,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text('Export failed: $e'),
+            backgroundColor: AppTheme.errorColor,
+          ),
+        );
+      }
     }
   }
 }

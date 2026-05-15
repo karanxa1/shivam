@@ -65,6 +65,7 @@ const hrMenuItems = [
   { title: 'Dashboard', icon: LayoutDashboard, path: '/' },
   { title: 'Employees', icon: Users, path: '/employees' },
   { title: 'Payslips', icon: Receipt, path: '/payslips' },
+  { title: 'Reports', icon: BarChart2, path: '/reports' },
 ];
 
 function NotificationBellIcon({ type }: { type: NotificationType }) {

@@ -39,10 +39,46 @@ import {
   Users,
   Loader2,
   Clock,
+  FileText,
 } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils/formatters';
 import type { Employee } from '@/types';
 import { toast } from 'sonner';
+import { generateFullEmployeeReport } from '@/lib/utils/reports';
+import { useEmployeePayslips } from '@/hooks';
+import { useTasks } from '@/hooks';
+
+function EmployeeReportButton({ employee }: { employee: Employee }) {
+  const [loading, setLoading] = useState(false);
+  const { payslips } = useEmployeePayslips(employee.id);
+  const { tasks } = useTasks(undefined, employee.id);
+
+  const handleDownload = async () => {
+    if (payslips.length === 0) {
+      toast.info('No payslip data for report');
+      return;
+    }
+    setLoading(true);
+    try {
+      await generateFullEmployeeReport(employee, payslips, tasks);
+      toast.success('Report downloaded');
+    } catch {
+      toast.error('Failed to generate report');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <DropdownMenuItem
+      onClick={handleDownload}
+      className="text-foreground hover:bg-muted cursor-pointer gap-2"
+    >
+      {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <FileText className="h-3.5 w-3.5" />}
+      Download Report
+    </DropdownMenuItem>
+  );
+}
 
 export default function EmployeesPage() {
   const { employees, loading, addEmployee, updateEmployee, deleteEmployee } = useEmployees();
@@ -272,6 +308,7 @@ export default function EmployeesPage() {
                             <Pencil className="h-3.5 w-3.5" />
                             Edit
                           </DropdownMenuItem>
+                          <EmployeeReportButton employee={employee} />
                           <DropdownMenuItem
                             onClick={() => handleDeleteEmployee(employee.id)}
                             className="text-destructive hover:bg-destructive/10 cursor-pointer gap-2"

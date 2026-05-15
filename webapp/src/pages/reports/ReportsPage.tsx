@@ -1,6 +1,7 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useEmployees, useProjects, useTasks, usePayslips } from '@/hooks';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   AreaChart,
@@ -17,13 +18,17 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { formatCurrencyCompact, formatMonthYear } from '@/lib/utils/formatters';
+import { generateCompanyOverallReport } from '@/lib/utils/reports';
 import {
   TrendingUp,
   Users,
   FolderKanban,
   Wallet,
   CheckCircle2,
+  Building2,
+  Loader2,
 } from 'lucide-react';
+import { toast } from 'sonner';
 
 const COLORS = ['#1d4ed8', '#2563eb', '#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe', '#dbeafe'];
 const STATUS_COLORS = ['#60a5fa', '#2563eb', '#1d4ed8'];
@@ -75,8 +80,25 @@ export default function ReportsPage() {
   const { projects, loading: projLoading } = useProjects();
   const { tasks, loading: tasksLoading } = useTasks();
   const { payslips, loading: payslipsLoading } = usePayslips();
+  const [isGeneratingOverall, setIsGeneratingOverall] = useState(false);
 
   const loading = empLoading || projLoading || tasksLoading || payslipsLoading;
+
+  const handleDownloadOverall = async () => {
+    if (empLoading || payslipsLoading) {
+      toast.info('Still loading data, please wait...');
+      return;
+    }
+    setIsGeneratingOverall(true);
+    try {
+      await generateCompanyOverallReport(employees, payslips);
+      toast.success('Company overall report downloaded');
+    } catch {
+      toast.error('Failed to generate report');
+    } finally {
+      setIsGeneratingOverall(false);
+    }
+  };
 
   // Payroll by month (AreaChart)
   const payrollByMonth = useMemo(() => {
@@ -210,9 +232,25 @@ export default function ReportsPage() {
             Data-driven insights for your organization
           </p>
         </div>
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
-          <TrendingUp className="h-3.5 w-3.5 text-primary" />
-          <span className="text-xs text-primary font-medium">Live Data</span>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1.5 text-xs"
+            disabled={isGeneratingOverall || loading}
+            onClick={handleDownloadOverall}
+          >
+            {isGeneratingOverall ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Building2 className="h-3.5 w-3.5" />
+            )}
+            Company Report
+          </Button>
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
+            <TrendingUp className="h-3.5 w-3.5 text-primary" />
+            <span className="text-xs text-primary font-medium">Live Data</span>
+          </div>
         </div>
       </div>
 
